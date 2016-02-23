@@ -513,6 +513,9 @@ class CircularArrayTests : XCTestCase {
     copy = array
     copy.removeAll()
     XCTAssertTrue(array != copy)
+    copy = array
+    copy.removeAll(keepCapacity: true)
+    XCTAssertTrue(array != copy)
     
     // removeFirst()
     copy = array
