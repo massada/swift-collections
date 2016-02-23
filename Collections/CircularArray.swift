@@ -296,10 +296,20 @@ extension CircularArray {
   ///   that is the target of this method) during the execution of
   ///   `body`: it may not appear to have its correct value.  Instead,
   ///   use only the `UnsafeMutableBufferPointer` argument to `body`.
-  public func withUnsafeMutableBufferPointer<R>(
+  public mutating func withUnsafeMutableBufferPointer<R>(
     @noescape body: (UnsafeMutableBufferPointer<Element>) throws -> R
     ) rethrows -> R {
-      return try storage_.withUnsafeMutableBufferPointer(body)
+      let storage = storage_
+      
+      // move self into a temporary working array
+      var work = CircularArray()
+      swap(&work, &self)
+      
+      // swap with the working array back before returning
+      defer {
+        swap(&work, &self)
+      }
+      return try storage.withUnsafeMutableBufferPointer(body)
   }
 }
 

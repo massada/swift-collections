@@ -201,6 +201,10 @@ class CircularArrayBuffer<Element> {
     let pointer = UnsafeMutableBufferPointer(start: storage_ + frontIndex_,
       count: count)
     
+    defer {
+      precondition(pointer.baseAddress == storage_ && pointer.count == count,
+        "replacing the storage is not allowed")
+    }
     return try body(pointer)
   }
   
