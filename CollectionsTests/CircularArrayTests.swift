@@ -26,9 +26,7 @@ class CircularArrayTests : XCTestCase {
     XCTAssertTrue(array.isEmpty)
     XCTAssertEqual(nil, array.first)
     XCTAssertEqual(nil, array.last)
-    XCTAssertEqual(0, array.startIndex)
-    XCTAssertEqual(0, array.endIndex)
-    XCTAssertEqual(nil, array.generate().next())
+    XCTAssertTrue(array.startIndex == array.endIndex)
   }
   
   func testInitialisesWithMinimumCapacity() {
@@ -49,9 +47,7 @@ class CircularArrayTests : XCTestCase {
       XCTAssertTrue(array.isEmpty)
       XCTAssertEqual(nil, array.first)
       XCTAssertEqual(nil, array.last)
-      XCTAssertEqual(0, array.startIndex)
-      XCTAssertEqual(0, array.endIndex)
-      XCTAssertEqual(nil, array.generate().next())
+      XCTAssertTrue(array.startIndex == array.endIndex)
     }
   }
   
@@ -63,9 +59,7 @@ class CircularArrayTests : XCTestCase {
     XCTAssertTrue(array.isEmpty)
     XCTAssertEqual(nil, array.first)
     XCTAssertEqual(nil, array.last)
-    XCTAssertEqual(0, array.startIndex)
-    XCTAssertEqual(0, array.endIndex)
-    XCTAssertEqual(nil, array.generate().next())
+    XCTAssertTrue(array.startIndex == array.endIndex)
   }
   
   func testInitialisesFromArrayLiteral() {
@@ -92,9 +86,7 @@ class CircularArrayTests : XCTestCase {
     XCTAssertTrue(array.isEmpty)
     XCTAssertEqual(nil, array.first)
     XCTAssertEqual(nil, array.last)
-    XCTAssertEqual(0, array.startIndex)
-    XCTAssertEqual(0, array.endIndex)
-    XCTAssertEqual(nil, array.generate().next())
+    XCTAssertTrue(array.startIndex == array.endIndex)
   }
   
   func testInitialisesFromSequence() {
@@ -136,9 +128,17 @@ class CircularArrayTests : XCTestCase {
     XCTAssertTrue(array.isEmpty)
     XCTAssertEqual(nil, array.first)
     XCTAssertEqual(nil, array.last)
-    XCTAssertEqual(0, array.startIndex)
-    XCTAssertEqual(0, array.endIndex)
-    XCTAssertEqual(nil, array.generate().next())
+    XCTAssertTrue(array.startIndex == array.endIndex)
+    
+    array = [1, 2, 3]
+    
+    array.removeAll(keepCapacity: true)
+    XCTAssertEqual(4, array.capacity)
+    XCTAssertEqual(0, array.count)
+    XCTAssertTrue(array.isEmpty)
+    XCTAssertEqual(nil, array.first)
+    XCTAssertEqual(nil, array.last)
+    XCTAssertTrue(array.startIndex == array.endIndex)
   }
   
   func testAppending() {
@@ -521,6 +521,8 @@ class CircularArrayTests : XCTestCase {
     
     // removeFirst(_:)
     copy = array
+    copy.removeFirst(0)
+    XCTAssertTrue(array == copy)
     copy.removeFirst(2)
     XCTAssertTrue(array != copy)
     
@@ -531,6 +533,8 @@ class CircularArrayTests : XCTestCase {
     
     // removeLast(_:)
     copy = array
+    copy.removeLast(0)
+    XCTAssertTrue(array == copy)
     copy.removeLast(2)
     XCTAssertTrue(array != copy)
     
