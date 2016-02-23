@@ -63,7 +63,7 @@ public protocol DequeCollectionType
   /// Removes the first `n` elements.
   ///
   /// - Complexity: O(`n`).
-  /// - Requires: `self.count >= n`.
+  /// - Requires: `n >= 0 && self.count >= n`.
   mutating func removeFirst(n: Int)
   
   /// Removes the element at the end and returns it.
@@ -166,7 +166,7 @@ extension DequeCollectionType where SubSequence == Self {
   /// Removes the first `n` elements.
   ///
   /// - Complexity: O(1).
-  /// - Requires: `self.count >= n`.
+  /// - Requires: `n >= 0 && self.count >= n`.
   public mutating func removeFirst(n: Int) {
     if n == 0 {
       return
