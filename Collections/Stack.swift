@@ -47,6 +47,8 @@ extension Stack : StackType {
   }
   
   /// Clears `Stack`, removing all elements.
+  ///
+  /// - Complexity: O(1).
   public mutating func clear() {
     storage_.removeAll()
   }
