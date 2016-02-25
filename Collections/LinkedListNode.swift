@@ -6,6 +6,7 @@
 //  Copyright © 2016 José Massada. All rights reserved.
 //
 
+/// A `LinkedList` node.
 class LinkedListNode<Element> {
   /// Constructs a `LinkedListNode` that points to itself.
   init() {
