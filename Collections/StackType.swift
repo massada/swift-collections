@@ -6,22 +6,28 @@
 //  Copyright © 2016 José Massada. All rights reserved.
 //
 
-// StackType
-public protocol StackType : ArrayLiteralConvertible, SequenceType {
-  typealias Element
-  
+/// A *collection* that supports adding an element and removing the most
+/// recently added element.
+public protocol StackType : SequenceType, ArrayLiteralConvertible {
+  /// Returns the number of elements.
   var count: Int { get }
   
+  /// Returns `true` if `self` is empty.
   var isEmpty: Bool { get }
   
+  /// Clears `self`, removing all elements.
   mutating func clear()
   
-  mutating func push(newElement: Element)
+  /// Pushes `newElement` to `self`.
+  mutating func push(newElement: Generator.Element)
   
+  /// Pops the most recently added element of `self` and returns it.
   @warn_unused_result
-  mutating func pop() -> Element
+  mutating func pop() -> Generator.Element
   
-  var top: Element? { get }
+  /// Returns the most recently added element of `self`, or `nil` if `self` is
+  /// empty.
+  var top: Generator.Element? { get }
 }
 
 // Default implementations
