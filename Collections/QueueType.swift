@@ -6,22 +6,28 @@
 //  Copyright © 2016 José Massada. All rights reserved.
 //
 
-// Queue
-public protocol QueueType : ArrayLiteralConvertible, SequenceType {
-  typealias Element
-  
+/// A *collection* where elements are kept in order. Supports adding an element
+/// to the head and removing the oldest added element from the front.
+public protocol QueueType : SequenceType, ArrayLiteralConvertible {
+  /// Returns the number of elements.
   var count: Int { get }
   
+  /// Returns `true` if `self` is empty.
   var isEmpty: Bool { get }
   
+  /// Clears `self`, removing all elements.
   mutating func clear()
   
-  mutating func enqueue(newElement: Element)
+  /// Enqueues `newElement` to `self`.
+  mutating func enqueue(newElement: Generator.Element)
   
+  /// Dequeues the oldest added element of `self` and returns it.
   @warn_unused_result
-  mutating func dequeue() -> Element
+  mutating func dequeue() -> Generator.Element
   
-  var front: Element? { get }
+  /// Returns the oldest added element of `self`, or `nil` if `self` is
+  /// empty.
+  var front: Generator.Element? { get }
 }
 
 // Default implementations
