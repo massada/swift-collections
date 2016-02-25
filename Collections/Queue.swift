@@ -11,24 +11,24 @@
 public struct Queue<Element> : ArrayLiteralConvertible {
   typealias Storage = CircularArray<Element>
   
-  // Create an empty queue
+  /// Constructs an empty `Queue`.
   public init() {
     storage_ = Storage()
   }
   
-  // Create a Queue from an Array literal
+  /// Constructs from an `Array` literal.
   public init(arrayLiteral elements: Element...) {
     storage_ = Storage(elements)
   }
   
-  // Create a Queue from a finite sequence of items
+  /// Constructs from an arbitrary sequence with elements of type `Element`.
   public init<
     S : SequenceType where S.Generator.Element == Element
   >(_ sequence: S) {
     storage_ = Storage(sequence)
   }
   
-  // The elements storage
+  /// The elements storage
   var storage_: Storage
 }
 
