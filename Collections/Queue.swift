@@ -28,7 +28,7 @@ public struct Queue<Element> : ArrayLiteralConvertible {
     storage_ = Storage(sequence)
   }
   
-  /// The elements storage
+  /// The elements storage.
   var storage_: Storage
 }
 
@@ -38,9 +38,7 @@ extension Queue : QueueType {
     return storage_.count
   }
   
-  /// Clears the `Queue`, removing all elements.
-  ///
-  /// - Complexity: O(1).
+  /// Clears `self`, removing all elements.
   public mutating func clear() {
     storage_.removeAll()
   }
@@ -55,8 +53,10 @@ extension Queue : QueueType {
   /// Dequeues the oldest added element of `self` and returns it.
   ///
   /// - Complexity: O(1).
+  /// - Requires: `self.count > 0`.
   @warn_unused_result
   public mutating func dequeue() -> Element {
+    precondition(count > 0)
     return storage_.removeFirst()
   }
   
@@ -68,11 +68,11 @@ extension Queue : QueueType {
 }
 
 extension Queue : SequenceType {
-  /// A type that provides the `Stack`'s iteration interface and
+  /// A type that provides the `Queue`'s iteration interface and
   /// encapsulates its iteration state.
   public typealias Generator = Storage.Generator
   
-  /// Return a *generator* over the elements of the `Stack`.
+  /// Return a *generator* over the elements of the `Queue`.
   ///
   /// - Complexity: O(1).
   @warn_unused_result

@@ -22,6 +22,8 @@ public protocol QueueType : SequenceType, ArrayLiteralConvertible {
   mutating func enqueue(newElement: Generator.Element)
   
   /// Dequeues the oldest added element of `self` and returns it.
+  ///
+  /// - Requires: `self.count > 0`.
   @warn_unused_result
   mutating func dequeue() -> Generator.Element
   
