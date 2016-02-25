@@ -12,7 +12,7 @@ public func isPowerOfTwo<T : IntegerType>(value: T) -> Bool {
   return value > 0 && (value & (value &- 1)) == 0
 }
 
-/// Returns the `value` nearest power of 2.
+/// Returns the `value`s nearest power of 2.
 @warn_unused_result
 public func nearestPowerOfTwo<T : IntegerType>(value: T) -> T {
   var v: T = 1
