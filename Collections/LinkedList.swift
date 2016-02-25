@@ -86,9 +86,9 @@ public struct LinkedList<Element> : ArrayLiteralConvertible {
 }
 
 extension LinkedList : DequeCollectionType {
-  // Returns the number of elements.
-  //
-  // - Complexity: O(1).
+  /// Returns the number of elements.
+  ///
+  /// - Complexity: O(1).
   public var count: Int {
     return box_.count_
   }
