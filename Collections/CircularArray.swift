@@ -161,7 +161,7 @@ extension CircularArray : DequeCollectionType {
   /// Removes the element at the end and returns it.
   ///
   /// - Complexity: O(1).
-  /// - Requires: `count > 0`
+  /// - Requires: `count > 0`.
   @warn_unused_result
   public mutating func removeLast() -> Element {
     precondition(count > 0, "can't remove items from an empty collection")
