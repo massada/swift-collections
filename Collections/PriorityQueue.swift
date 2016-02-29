@@ -6,62 +6,92 @@
 //  Copyright © 2016 massada. All rights reserved.
 //
 
-/// A *collection* where `Element`s are kept in order of priority.
+/// A *collection* where `Element`s are kept in order.
 public struct PriorityQueue<Element : Comparable> : ArrayLiteralConvertible {
-  typealias Heap = CircularArray<Element>
+  typealias Storage = CircularArray<Element>
   
-  /// Constructs an empty `PriorityQueue` with descending order by default.
-  public init(ascending: Bool = false) {
-    heap_ = Heap()
-    operation_ = ascending ? { $0 > $1 } : { $0 < $1 }
+  /// Constructs an empty `PriorityQueue` that orders its elements according
+  /// to their natural ordering.
+  public init() {
+    self.init(isOrdered: <)
+  }
+  
+  public init(isOrdered: (Element, Element) -> Bool) {
+    storage_ = Storage()
+    isOrdered_ = isOrdered
   }
   
   /// Constructs from an `Array` literal.
+  ///
+  /// - Complexity: O(n).
   public init(arrayLiteral elements: Element...) {
-    heap_ = Heap(minimumCapacity: elements.count)
-    operation_ = { $0 < $1 }
-    
-    for element in elements {
-      enqueue(element)
-    }
+    self.init(elements)
   }
   
   /// Constructs from an arbitrary sequence with elements of type `Element`.
   public init<
     S : SequenceType where S.Generator.Element == Element
-    >(_ sequence: S) {
-      heap_ = Heap(minimumCapacity: sequence.underestimateCount())
-      operation_ = { $0 < $1 }
-      
-      for element in sequence {
-        enqueue(element)
-      }
+  >(_ sequence: S) {
+    self.init(sequence, isOrdered: <)
   }
   
-  /// The elements heap.
-  var heap_: Heap
+  /// Constructs from an arbitrary sequence with elements of type `Element`.
+  public init<
+    S : SequenceType where S.Generator.Element == Element
+  >(_ sequence: S, isOrdered: (Element, Element) -> Bool) {
+    storage_ = Storage(sequence)
+    isOrdered_ = isOrdered
+    
+    let endIndex = count >> 1
+    for i in (0..<endIndex).reverse() {
+      heapifyDown(i)
+    }
+  }
   
-  /// The priority order operation.
-  let operation_: (Element, Element) -> Bool
+  /// Constructs from an arbitrary sequence with elements of type `Element`.
+  public init<
+    C : CollectionType where C.Generator.Element == Element
+  >(_ elements: C) {
+    self.init(elements, isOrdered: <)
+  }
+  
+  /// Constructs from an arbitrary sequence with elements of type `Element`.
+  public init<
+    C : CollectionType where C.Generator.Element == Element
+  >(_ elements: C, isOrdered: (Element, Element) -> Bool) {
+    storage_ = Storage(elements)
+    isOrdered_ = isOrdered
+    
+    let endIndex = count >> 1
+    for i in (0..<endIndex).reverse() {
+      heapifyDown(i)
+    }
+  }
+  
+  /// The elements storage.
+  var storage_: Storage
+  
+  /// The ordering operation.
+  let isOrdered_: (Element, Element) -> Bool
 }
 
-extension PriorityQueue : PriorityQueueType {
+extension PriorityQueue : HeapType {
   /// Returns the number of elements.
   public var count: Int {
-    return heap_.count
+    return storage_.count
   }
   
   /// Clears `self`, removing all elements.
   public mutating func clear() {
-    heap_.removeAll()
+    storage_.removeAll()
   }
   
   /// Enqueues `newElement` to `self` while keeping priority order.
   ///
   /// - Complexity: O(log n).
   public mutating func enqueue(newElement: Element) {
-    heap_.append(newElement)
-    heapifyUp(heap_.endIndex - 1)
+    storage_.append(newElement)
+    heapifyUp(storage_.endIndex - 1)
   }
   
   /// Dequeues the highest/lowest priority element of `self` and returns it.
@@ -72,9 +102,13 @@ extension PriorityQueue : PriorityQueueType {
   public mutating func dequeue() -> Element {
     precondition(count > 0)
     
-    swap(&heap_[0], &heap_[heap_.endIndex - 1])
+    if count == 1 {
+      return storage_.removeFirst()
+    }
     
-    let element = heap_.removeLast()
+    swap(&storage_[0], &storage_[storage_.endIndex - 1])
+    
+    let element = storage_.removeLast()
     heapifyDown(0)
     return element
   }
@@ -82,63 +116,77 @@ extension PriorityQueue : PriorityQueueType {
   /// Returns the highest/lowest priority element of `self`, or `nil` if
   /// `self` is empty.
   public var front: Element? {
-    return heap_.first
+    return storage_.first
   }
   
-  /// Heapifies-up the heap.
+  /// Heapifies-up the storage.
   mutating func heapifyUp(index: Int) {
-    let element = heap_[index]
+    let element = storage_[index]
     
-    var i = index
-    while i > 1 && operation_(heap_[i / 2], heap_[i]) {
-      heap_[i / 2] = heap_[i]
-      i = i / 2
-    }
-    
-    heap_[i] = element
-  }
-  
-  /// Heapifies-down the heap.
-  mutating func heapifyDown(index: Int) {
-    let element = heap_[index]
-    
-    var i = 2 * index + 1
-    while i < heap_.count {
-      var j = 2 * i + 1
-      if j != heap_.count && operation_(heap_[j], heap_[j + 1]) {
-        j += 1
-      }
+    var index = index
+    while index > 0 {
+      let parentIndex = (index - 1) >> 1;
+      let parentElement = storage_[parentIndex]
       
-      if !operation_(element, heap_[j]) {
+      if isOrdered_(parentElement, element) {
         break
       }
       
-      heap_[i] = heap_[j]
-      i = j
+      storage_[index] = parentElement
+      index = parentIndex
     }
     
-    heap_[i] = element
+    storage_[index] = element
+  }
+  
+  /// Heapifies-down the storage.
+  mutating func heapifyDown(index: Int) {
+    let element = storage_[index]
+    
+    var index = index
+    let endIndex = count >> 1
+    
+    while index < endIndex {
+      var leftIndex = (index << 1) + 1
+      let leftElement = storage_[leftIndex]
+      
+      let rightIndex = leftIndex + 1
+      if rightIndex < storage_.count &&
+        isOrdered_(storage_[rightIndex], leftElement)
+      {
+        leftIndex = rightIndex
+      }
+      
+      if !isOrdered_(leftElement, element) {
+        break
+      }
+      
+      storage_[index] = leftElement
+      index = leftIndex
+    }
+    
+    storage_[index] = element
   }
 }
 
 extension PriorityQueue : SequenceType {
   /// A type that provides the `PriorityQueue`'s iteration interface and
   /// encapsulates its iteration state.
-  public typealias Generator = Heap.Generator
+  public typealias Generator = Storage.Generator
   
   /// Return a *generator* over the elements of the `PriorityQueue`.
   ///
   /// - Complexity: O(1).
   @warn_unused_result
   public func generate() -> Generator {
-    return heap_.generate()
+    return storage_.generate()
   }
 }
 
 extension PriorityQueue : CustomStringConvertible, CustomDebugStringConvertible {
   /// A textual representation of `self`.
   public var description: String {
-    return heap_.description
+    return storage_.description
   }
   
   /// A textual representation of `self`, suitable for debugging.
@@ -151,8 +199,8 @@ extension PriorityQueue : CustomStringConvertible, CustomDebugStringConvertible 
 @warn_unused_result
 public func ==<Element>(
   lhs: PriorityQueue<Element>, rhs: PriorityQueue<Element>
-  ) -> Bool {
-    return lhs.heap_ == rhs.heap_
+) -> Bool {
+  return lhs.storage_ == rhs.storage_
 }
 
 /// Returns `true` if these priority queues do not contain the same elements.
@@ -160,5 +208,5 @@ public func ==<Element>(
 public func !=<Element>(
   lhs: PriorityQueue<Element>, rhs: PriorityQueue<Element>
 ) -> Bool {
-  return lhs.heap_ != rhs.heap_
+  return lhs.storage_ != rhs.storage_
 }

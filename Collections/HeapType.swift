@@ -1,13 +1,13 @@
 //
-//  PriorityQueueType.swift
+//  HeapType.swift
 //  Collections
 //
 //  Created by José Massada on 25/02/2016.
 //  Copyright © 2016 massada. All rights reserved.
 //
 
-/// A *collection* where elements are kept in priority order.
-public protocol PriorityQueueType : SequenceType, ArrayLiteralConvertible {
+/// A *collection* where elements are kept in order.
+public protocol HeapType : SequenceType, ArrayLiteralConvertible {
   /// The type of element.
   typealias Element : Comparable
   
@@ -35,7 +35,7 @@ public protocol PriorityQueueType : SequenceType, ArrayLiteralConvertible {
 }
 
 // Default implementations
-extension PriorityQueueType {
+extension HeapType {
   public var isEmpty: Bool {
     return count == 0
   }
