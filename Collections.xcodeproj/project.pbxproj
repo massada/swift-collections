@@ -14,6 +14,7 @@
 		EB68D93E1C54554800D703C5 /* Collections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB68D9331C54554800D703C5 /* Collections.framework */; };
 		EB68D94E1C54556000D703C5 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB68D94D1C54556000D703C5 /* Queue.swift */; };
 		EB68D9501C54559F00D703C5 /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB68D94F1C54559F00D703C5 /* QueueTests.swift */; };
+		EB92F85A1C81D2D70029E0BD /* PriorityQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92F8591C81D2D70029E0BD /* PriorityQueueTests.swift */; };
 		EB9FC3F61C5838D900FF722A /* StackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9FC3F51C5838D900FF722A /* StackTests.swift */; };
 		EB9FC3F81C5AAA5300FF722A /* LinkedListNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9FC3F71C5AAA5200FF722A /* LinkedListNode.swift */; };
 		EB9FC3FA1C5AADDF00FF722A /* LinkedListIndex.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB9FC3F91C5AADDF00FF722A /* LinkedListIndex.swift */; };
@@ -21,6 +22,8 @@
 		EBA11FC51C56C1D700ECC236 /* LinkedListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA11FC41C56C1D700ECC236 /* LinkedListTests.swift */; };
 		EBA11FC71C58083100ECC236 /* QueueType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA11FC61C58083100ECC236 /* QueueType.swift */; };
 		EBA11FC91C580D2800ECC236 /* StackType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBA11FC81C580D2800ECC236 /* StackType.swift */; };
+		EBBE62951C7F85AD002E6BD9 /* HeapType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBBE62941C7F85AD002E6BD9 /* HeapType.swift */; };
+		EBBE62971C7F85B8002E6BD9 /* PriorityQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBBE62961C7F85B8002E6BD9 /* PriorityQueue.swift */; };
 		EBE36E761C553C4100FC3EAF /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE36E751C553C4100FC3EAF /* Stack.swift */; };
 		EBE36E781C554E0A00FC3EAF /* DequeCollectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE36E771C554E0A00FC3EAF /* DequeCollectionType.swift */; };
 		EBE36E7A1C554FCE00FC3EAF /* CircularArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE36E791C554FCE00FC3EAF /* CircularArray.swift */; };
@@ -48,6 +51,7 @@
 		EB68D9441C54554800D703C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EB68D94D1C54556000D703C5 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		EB68D94F1C54559F00D703C5 /* QueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueTests.swift; sourceTree = "<group>"; };
+		EB92F8591C81D2D70029E0BD /* PriorityQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriorityQueueTests.swift; sourceTree = "<group>"; };
 		EB9FC3F51C5838D900FF722A /* StackTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackTests.swift; sourceTree = "<group>"; };
 		EB9FC3F71C5AAA5200FF722A /* LinkedListNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkedListNode.swift; sourceTree = "<group>"; };
 		EB9FC3F91C5AADDF00FF722A /* LinkedListIndex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkedListIndex.swift; sourceTree = "<group>"; };
@@ -55,6 +59,8 @@
 		EBA11FC41C56C1D700ECC236 /* LinkedListTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LinkedListTests.swift; sourceTree = "<group>"; };
 		EBA11FC61C58083100ECC236 /* QueueType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueType.swift; sourceTree = "<group>"; };
 		EBA11FC81C580D2800ECC236 /* StackType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StackType.swift; sourceTree = "<group>"; };
+		EBBE62941C7F85AD002E6BD9 /* HeapType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HeapType.swift; sourceTree = "<group>"; };
+		EBBE62961C7F85B8002E6BD9 /* PriorityQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriorityQueue.swift; sourceTree = "<group>"; };
 		EBE36E751C553C4100FC3EAF /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		EBE36E771C554E0A00FC3EAF /* DequeCollectionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DequeCollectionType.swift; sourceTree = "<group>"; };
 		EBE36E791C554FCE00FC3EAF /* CircularArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularArray.swift; sourceTree = "<group>"; };
@@ -113,6 +119,8 @@
 				EBE36E751C553C4100FC3EAF /* Stack.swift */,
 				EBA11FC61C58083100ECC236 /* QueueType.swift */,
 				EB68D94D1C54556000D703C5 /* Queue.swift */,
+				EBBE62941C7F85AD002E6BD9 /* HeapType.swift */,
+				EBBE62961C7F85B8002E6BD9 /* PriorityQueue.swift */,
 				EB0F1FAF1C790511008FEE19 /* Misc.swift */,
 			);
 			path = Collections;
@@ -126,6 +134,7 @@
 				EBA11FC41C56C1D700ECC236 /* LinkedListTests.swift */,
 				EB9FC3F51C5838D900FF722A /* StackTests.swift */,
 				EB68D94F1C54559F00D703C5 /* QueueTests.swift */,
+				EB92F8591C81D2D70029E0BD /* PriorityQueueTests.swift */,
 				EB0F1FB11C792FE8008FEE19 /* MiscTests.swift */,
 			);
 			path = CollectionsTests;
@@ -242,6 +251,7 @@
 				EB9FC3F81C5AAA5300FF722A /* LinkedListNode.swift in Sources */,
 				EBA11FC11C56B6F700ECC236 /* LinkedList.swift in Sources */,
 				EBA11FC91C580D2800ECC236 /* StackType.swift in Sources */,
+				EBBE62951C7F85AD002E6BD9 /* HeapType.swift in Sources */,
 				EB0F1FAE1C78D27F008FEE19 /* CircularArrayBuffer.swift in Sources */,
 				EBA11FC71C58083100ECC236 /* QueueType.swift in Sources */,
 				EB0F1FB01C790511008FEE19 /* Misc.swift in Sources */,
@@ -250,6 +260,7 @@
 				EBE36E761C553C4100FC3EAF /* Stack.swift in Sources */,
 				EB9FC3FA1C5AADDF00FF722A /* LinkedListIndex.swift in Sources */,
 				EBE36E781C554E0A00FC3EAF /* DequeCollectionType.swift in Sources */,
+				EBBE62971C7F85B8002E6BD9 /* PriorityQueue.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -262,6 +273,7 @@
 				EB0F1FB21C792FE8008FEE19 /* MiscTests.swift in Sources */,
 				EBA11FC51C56C1D700ECC236 /* LinkedListTests.swift in Sources */,
 				EB68D9501C54559F00D703C5 /* QueueTests.swift in Sources */,
+				EB92F85A1C81D2D70029E0BD /* PriorityQueueTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
