@@ -76,7 +76,9 @@ extension PriorityQueue : HeapType {
   /// - Complexity: O(log n).
   public mutating func enqueue(newElement: Element) {
     storage_.append(newElement)
-    heapifyUp(storage_.endIndex - 1)
+    if count > 1 {
+      heapifyUp(storage_.endIndex - 1)
+    }
   }
   
   /// Dequeues the highest/lowest priority element of `self` and returns it.
@@ -110,7 +112,7 @@ extension PriorityQueue : HeapType {
     
     var index = index
     while index > 0 {
-      let parentIndex = (index - 1) >> 1;
+      let parentIndex = (index - 1) >> 1
       let parentElement = storage_[parentIndex]
       
       if isOrdered_(parentElement, element) {
@@ -132,22 +134,23 @@ extension PriorityQueue : HeapType {
     let endIndex = count >> 1
     
     while index < endIndex {
-      var leftIndex = (index << 1) + 1
-      let leftElement = storage_[leftIndex]
+      var childIndex = (index << 1) + 1
+      var childElement = storage_[childIndex]
       
-      let rightIndex = leftIndex + 1
+      let rightIndex = childIndex + 1
       if rightIndex < storage_.count &&
-        isOrdered_(storage_[rightIndex], leftElement)
+        isOrdered_(storage_[rightIndex], childElement)
       {
-        leftIndex = rightIndex
+        childIndex = rightIndex
+        childElement = storage_[childIndex]
       }
       
-      if !isOrdered_(leftElement, element) {
+      if !isOrdered_(childElement, element) {
         break
       }
       
-      storage_[index] = leftElement
-      index = leftIndex
+      storage_[index] = childElement
+      index = childIndex
     }
     
     storage_[index] = element
@@ -160,6 +163,9 @@ extension PriorityQueue : SequenceType {
   public typealias Generator = Storage.Generator
   
   /// Return a *generator* over the elements of the `PriorityQueue`.
+  ///
+  /// - Note: The *generator* does not return the elements in any particular
+  /// order.
   ///
   /// - Complexity: O(1).
   @warn_unused_result
