@@ -6,7 +6,7 @@
 //  Copyright © 2016 massada. All rights reserved.
 //
 
-/// A *collection* where `Element`s are kept in order.
+/// A *collection* where `Element`s are kept ordered.
 public struct PriorityQueue<Element : Comparable> : ArrayLiteralConvertible {
   typealias Storage = CircularArray<Element>
   
@@ -16,6 +16,8 @@ public struct PriorityQueue<Element : Comparable> : ArrayLiteralConvertible {
     self.init(isOrdered: <)
   }
   
+  /// Constructs a `PriorityQueue` that orders its elements according
+  /// to the result of calling `isOrdered`.
   public init(isOrdered: (Element, Element) -> Bool) {
     storage_ = Storage()
     isOrdered_ = isOrdered
@@ -28,14 +30,17 @@ public struct PriorityQueue<Element : Comparable> : ArrayLiteralConvertible {
     self.init(elements)
   }
   
-  /// Constructs from an arbitrary sequence with elements of type `Element`.
+  /// Constructs from an arbitrary sequence with elements of type `Element`
+  /// ordering according to the elements natural order.
   public init<
     S : SequenceType where S.Generator.Element == Element
   >(_ sequence: S) {
     self.init(sequence, isOrdered: <)
   }
   
-  /// Constructs from an arbitrary sequence with elements of type `Element`.
+  /// Constructs from an arbitrary sequence with elements of type `Element`
+  /// ordering according to the result of calling `isOrdered` over the
+  /// elements.
   public init<
     S : SequenceType where S.Generator.Element == Element
   >(_ sequence: S, isOrdered: (Element, Element) -> Bool) {
@@ -48,30 +53,10 @@ public struct PriorityQueue<Element : Comparable> : ArrayLiteralConvertible {
     }
   }
   
-  /// Constructs from an arbitrary sequence with elements of type `Element`.
-  public init<
-    C : CollectionType where C.Generator.Element == Element
-  >(_ elements: C) {
-    self.init(elements, isOrdered: <)
-  }
-  
-  /// Constructs from an arbitrary sequence with elements of type `Element`.
-  public init<
-    C : CollectionType where C.Generator.Element == Element
-  >(_ elements: C, isOrdered: (Element, Element) -> Bool) {
-    storage_ = Storage(elements)
-    isOrdered_ = isOrdered
-    
-    let endIndex = count >> 1
-    for i in (0..<endIndex).reverse() {
-      heapifyDown(i)
-    }
-  }
-  
   /// The elements storage.
   var storage_: Storage
   
-  /// The ordering operation.
+  /// The ordering function.
   let isOrdered_: (Element, Element) -> Bool
 }
 
@@ -183,7 +168,9 @@ extension PriorityQueue : SequenceType {
   }
 }
 
-extension PriorityQueue : CustomStringConvertible, CustomDebugStringConvertible {
+extension PriorityQueue
+  : CustomStringConvertible, CustomDebugStringConvertible
+{
   /// A textual representation of `self`.
   public var description: String {
     return storage_.description
