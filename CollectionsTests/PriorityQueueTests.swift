@@ -26,6 +26,22 @@ class PriorityQueueTests : XCTestCase {
     XCTAssertEqual(nil, queue.front)
   }
   
+  func testInitialisesWithNaturalOrdering() {
+    let queue = PriorityQueue<Int>(isOrdered: <)
+    
+    XCTAssertTrue(queue.isEmpty)
+    XCTAssertEqual(0, queue.count)
+    XCTAssertEqual(nil, queue.front)
+  }
+  
+  func testInitialisesWithNonNaturalOrdering() {
+    let queue = PriorityQueue<Int>(isOrdered: >)
+    
+    XCTAssertTrue(queue.isEmpty)
+    XCTAssertEqual(0, queue.count)
+    XCTAssertEqual(nil, queue.front)
+  }
+  
   func testInitialisesFromEmptyArrayLiteral() {
     let queue: PriorityQueue<Int> = []
     
@@ -54,6 +70,22 @@ class PriorityQueueTests : XCTestCase {
     XCTAssertEqual(nil, queue.front)
   }
   
+  func testInitialisesFromEmptySequenceWithNaturalOrdering() {
+    let queue = PriorityQueue<Int>([], isOrdered: <)
+    
+    XCTAssertTrue(queue.isEmpty)
+    XCTAssertEqual(0, queue.count)
+    XCTAssertEqual(nil, queue.front)
+  }
+  
+  func testInitialisesFromEmptySequenceWithNonNaturalOrdering() {
+    let queue = PriorityQueue<Int>([], isOrdered: >)
+    
+    XCTAssertTrue(queue.isEmpty)
+    XCTAssertEqual(0, queue.count)
+    XCTAssertEqual(nil, queue.front)
+  }
+  
   func testInitialisesFromSequence() {
     let queue = PriorityQueue<Int>([1, 2, 3])
     
@@ -63,6 +95,30 @@ class PriorityQueueTests : XCTestCase {
     
     for (i, element) in queue.enumerate() {
       XCTAssertEqual(i + 1, element)
+    }
+  }
+  
+  func testInitialisesFromSequenceWithNaturalOrdering() {
+    let queue = PriorityQueue<Int>([1, 2, 3], isOrdered: <)
+    
+    XCTAssertFalse(queue.isEmpty)
+    XCTAssertEqual(3, queue.count)
+    XCTAssertEqual(1, queue.front)
+    
+    for (i, element) in queue.enumerate() {
+      XCTAssertEqual(i + 1, element)
+    }
+  }
+  
+  func testInitialisesFromSequenceWithNonNaturalOrdering() {
+    let queue = PriorityQueue<Int>([1, 2, 3], isOrdered: >)
+    
+    XCTAssertFalse(queue.isEmpty)
+    XCTAssertEqual(3, queue.count)
+    XCTAssertEqual(3, queue.front)
+    
+    for (i, element) in queue.enumerate() {
+      XCTAssertEqual(3 - i, element)
     }
   }
   
@@ -80,7 +136,7 @@ class PriorityQueueTests : XCTestCase {
   }
   
   func testPushesElement() {
-    var queue: PriorityQueue<Int> = []
+    var queue = PriorityQueue<Int>()
     
     queue.enqueue(1)
     XCTAssertFalse(queue.isEmpty)
@@ -89,7 +145,7 @@ class PriorityQueueTests : XCTestCase {
   }
   
   func testPushesElements() {
-    var queue: PriorityQueue<Int> = []
+    var queue = PriorityQueue<Int>()
     
     queue.enqueue(1)
     queue.enqueue(2)
@@ -101,6 +157,22 @@ class PriorityQueueTests : XCTestCase {
     
     for (i, element) in queue.enumerate() {
       XCTAssertEqual(i + 1, element)
+    }
+  }
+  
+  func testPushesElementsWithNonNaturalOrdering() {
+    var queue = PriorityQueue<Int>(isOrdered: >)
+    
+    queue.enqueue(1)
+    queue.enqueue(2)
+    queue.enqueue(3)
+    
+    XCTAssertFalse(queue.isEmpty)
+    XCTAssertEqual(3, queue.count)
+    XCTAssertEqual(3, queue.front)
+    
+    for i in 0..<3 {
+      XCTAssertEqual(3 - i, queue.dequeue())
     }
   }
   
@@ -120,6 +192,18 @@ class PriorityQueueTests : XCTestCase {
     XCTAssertEqual(1, queue.dequeue())
     XCTAssertEqual(2, queue.dequeue())
     XCTAssertEqual(3, queue.dequeue())
+    
+    XCTAssertTrue(queue.isEmpty)
+    XCTAssertEqual(0, queue.count)
+    XCTAssertEqual(nil, queue.front)
+  }
+  
+  func testPopsElementsWithNonNaturalOrdering() {
+    var queue = PriorityQueue([1, 2, 3], isOrdered: >)
+    
+    XCTAssertEqual(3, queue.dequeue())
+    XCTAssertEqual(2, queue.dequeue())
+    XCTAssertEqual(1, queue.dequeue())
     
     XCTAssertTrue(queue.isEmpty)
     XCTAssertEqual(0, queue.count)
