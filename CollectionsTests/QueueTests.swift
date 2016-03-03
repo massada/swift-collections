@@ -73,10 +73,6 @@ class QueueTests : XCTestCase {
     XCTAssertTrue(queue.isEmpty)
     XCTAssertEqual(0, queue.count)
     XCTAssertEqual(nil, queue.front)
-    
-    for (i, element) in queue.enumerate() {
-      XCTAssertEqual(3 - i, element)
-    }
   }
   
   func testPushesElement() {
