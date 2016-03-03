@@ -10,6 +10,7 @@
 		EB0F1FAE1C78D27F008FEE19 /* CircularArrayBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F1FAD1C78D27F008FEE19 /* CircularArrayBuffer.swift */; };
 		EB0F1FB01C790511008FEE19 /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F1FAF1C790511008FEE19 /* Misc.swift */; };
 		EB0F1FB21C792FE8008FEE19 /* MiscTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F1FB11C792FE8008FEE19 /* MiscTests.swift */; };
+		EB2CC7C61C88BCBE00CAB433 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = EB2CC7C51C88BCBE00CAB433 /* LICENSE.txt */; };
 		EB68D9371C54554800D703C5 /* Collections.h in Headers */ = {isa = PBXBuildFile; fileRef = EB68D9361C54554800D703C5 /* Collections.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB68D93E1C54554800D703C5 /* Collections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB68D9331C54554800D703C5 /* Collections.framework */; };
 		EB68D94E1C54556000D703C5 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB68D94D1C54556000D703C5 /* Queue.swift */; };
@@ -44,6 +45,7 @@
 		EB0F1FAD1C78D27F008FEE19 /* CircularArrayBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularArrayBuffer.swift; sourceTree = "<group>"; };
 		EB0F1FAF1C790511008FEE19 /* Misc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 		EB0F1FB11C792FE8008FEE19 /* MiscTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiscTests.swift; sourceTree = "<group>"; };
+		EB2CC7C51C88BCBE00CAB433 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		EB68D9331C54554800D703C5 /* Collections.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Collections.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB68D9361C54554800D703C5 /* Collections.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Collections.h; sourceTree = "<group>"; };
 		EB68D9381C54554800D703C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 		EB68D9291C54554800D703C5 = {
 			isa = PBXGroup;
 			children = (
+				EB2CC7C51C88BCBE00CAB433 /* LICENSE.txt */,
 				EB68D9351C54554800D703C5 /* Collections */,
 				EB68D9411C54554800D703C5 /* CollectionsTests */,
 				EB68D9341C54554800D703C5 /* Products */,
@@ -231,6 +234,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB2CC7C61C88BCBE00CAB433 /* LICENSE.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
