@@ -154,6 +154,9 @@ class LinkedListTests : XCTestCase {
     
     XCTAssertEqual(8, list.count)
     
+    list.removeFirst(0)
+    XCTAssertEqual(8, list.count)
+    
     list.removeFirst(8)
     XCTAssert(list.isEmpty)
   }
@@ -176,9 +179,10 @@ class LinkedListTests : XCTestCase {
     
     XCTAssertEqual(8, list.count)
     
-    while list.last != nil {
-      _ = list.removeLast()
-    }
+    list.removeLast(0)
+    XCTAssertEqual(8, list.count)
+    
+    list.removeLast(8)
     XCTAssert(list.isEmpty)
   }
   
