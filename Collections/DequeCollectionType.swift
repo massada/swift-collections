@@ -135,7 +135,7 @@ extension DequeCollectionType {
       "can't remove more items from a collection than it contains")
     
     for _ in 0..<n {
-      _ = removeFirst()
+      _ = removeLast()
     }
   }
   
