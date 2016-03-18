@@ -412,55 +412,6 @@ class ArrayDequeTests : XCTestCase {
     assertCopiesOnWrite(array)
   }
   
-  func testUnsafeAdressing() {
-    var array: ArrayDeque = [1, 2, 3]
-    
-    // test unwrapped buffer
-    
-    // 1, 2, 3
-    array.withUnsafeBufferPointer {
-      for i in 0..<3 {
-        XCTAssertEqual(i + 1, ($0.baseAddress + i).memory)
-      }
-    }
-    array.withUnsafeMutableBufferPointer {
-      for i in 0..<3 {
-        XCTAssertEqual(i + 1, ($0.baseAddress + i).memory)
-        ($0.baseAddress + i).memory = 3 - i
-      }
-    }
-    
-    // 3, 2, 1
-    array.withUnsafeBufferPointer {
-      for i in 0..<3 {
-        XCTAssertEqual(3 - i, ($0.baseAddress + i).memory)
-      }
-    }
-    
-    // test wrapped buffer
-    array.prepend(4)
-    
-    // 4, 3, 2, 1
-    array.withUnsafeBufferPointer {
-      for i in 0..<4 {
-        XCTAssertEqual(4 - i, ($0.baseAddress + i).memory)
-      }
-    }
-    array.withUnsafeMutableBufferPointer {
-      for i in 0..<4 {
-        XCTAssertEqual(4 - i, ($0.baseAddress + i).memory)
-        ($0.baseAddress + i).memory = i + 1
-      }
-    }
-    
-    // 1, 2, 3, 4
-    array.withUnsafeBufferPointer {
-      for i in 0..<4 {
-        XCTAssertEqual(i + 1, ($0.baseAddress + i).memory)
-      }
-    }
-  }
-  
   func testEquals() {
     XCTAssertTrue(ArrayDeque<Int>() == [])
     XCTAssertTrue([] == ArrayDeque<Int>([]))

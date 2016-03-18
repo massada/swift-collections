@@ -98,11 +98,11 @@ extension ArrayDeque : DequeCollectionType {
   /// - Complexity: O(*length of `newElements`*).
   public mutating func prependContentsOf<
     C : CollectionType where C.Generator.Element == Element
-    >(newElements: C) {
-      reserveCapacity(numericCast(newElements.count))
-      for element in newElements.reverse() {
-        storage_.prepend(element)
-      }
+  >(newElements: C) {
+    reserveCapacity(numericCast(newElements.count))
+    for element in newElements.reverse() {
+      storage_.prepend(element)
+    }
   }
   
   /// Appends `newElement` to the `ArrayDeque`.
@@ -267,9 +267,7 @@ extension ArrayDeque : Indexable, MutableIndexable {
   }
 }
 
-extension ArrayDeque
-  : CustomStringConvertible, CustomDebugStringConvertible {
-  
+extension ArrayDeque : CustomStringConvertible, CustomDebugStringConvertible {
   /// A textual representation of `self`.
   public var description: String {
     return Array(self).description
@@ -278,49 +276,6 @@ extension ArrayDeque
   /// A textual representation of `self`, suitable for debugging.
   public var debugDescription: String {
     return "ArrayDeque(\(description))"
-  }
-}
-
-extension ArrayDeque {
-  /// Call `body(p)`, where `p` is a pointer to the `ArrayDeque`'s
-  /// contiguous storage.
-  ///
-  /// Often, the optimizer can eliminate bounds checks within an
-  /// array algorithm, but when that fails, invoking the
-  /// same algorithm on `body`'s argument lets you trade safety for
-  /// speed.
-  public func withUnsafeBufferPointer<R>(
-    @noescape body: (UnsafeBufferPointer<Element>) throws -> R
-    ) rethrows -> R {
-      return try storage_.withUnsafeBufferPointer(body)
-  }
-  
-  /// Call `body(p)`, where `p` is a pointer to the `ArrayDeque`'s
-  /// mutable contiguous storage.
-  ///
-  /// Often, the optimizer can eliminate bounds- and uniqueness-checks
-  /// within an array algorithm, but when that fails, invoking the
-  /// same algorithm on `body`'s argument lets you trade safety for
-  /// speed.
-  ///
-  /// - Warning: Do not rely on anything about `self` (the `ArrayDeque`
-  ///   that is the target of this method) during the execution of
-  ///   `body`: it may not appear to have its correct value.  Instead,
-  ///   use only the `UnsafeMutableBufferPointer` argument to `body`.
-  public mutating func withUnsafeMutableBufferPointer<R>(
-    @noescape body: (UnsafeMutableBufferPointer<Element>) throws -> R
-    ) rethrows -> R {
-      let storage = storage_
-      
-      // move self into a temporary working array
-      var work = ArrayDeque()
-      swap(&work, &self)
-      
-      // swap with the working array back before returning
-      defer {
-        swap(&work, &self)
-      }
-      return try storage.withUnsafeMutableBufferPointer(body)
   }
 }
 
