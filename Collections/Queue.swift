@@ -20,7 +20,7 @@
 /// A fast, *collection* where `Element`s are kept in order. Supports adding an
 /// element to the head and removing the oldest added element from the front.
 public struct Queue<Element> : ArrayLiteralConvertible {
-  typealias Storage = CircularArray<Element>
+  typealias Storage = ArrayDeque<Element>
   
   /// Constructs an empty `Queue`.
   public init() {

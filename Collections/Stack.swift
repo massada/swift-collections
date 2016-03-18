@@ -20,7 +20,7 @@
 /// A fast, *collection* of `Element` that supports adding an element and
 /// removing the most recently added element.
 public struct Stack<Element> : ArrayLiteralConvertible {
-  typealias Storage = CircularArray<Element>
+  typealias Storage = ArrayDeque<Element>
   
   /// Constructs an empty `Stack`.
   public init() {

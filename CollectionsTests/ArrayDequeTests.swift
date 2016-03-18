@@ -1,5 +1,5 @@
 //
-// CircularArrayTests.swift
+// ArrayDequeTests.swift
 // Collections
 //
 // Copyright (c) 2016 José Massada <jose.massada@gmail.com>
@@ -20,7 +20,7 @@
 import XCTest
 @testable import Collections
 
-class CircularArrayTests : XCTestCase {
+class ArrayDequeTests : XCTestCase {
   override func setUp() {
     super.setUp()
   }
@@ -30,7 +30,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testInitialises() {
-    let array = CircularArray<Int>()
+    let array = ArrayDeque<Int>()
     
     XCTAssertEqual(0, array.capacity)
     XCTAssertEqual(0, array.count)
@@ -42,7 +42,7 @@ class CircularArrayTests : XCTestCase {
   
   func testInitialisesWithMinimumCapacity() {
     for i in 0..<6 {
-      let array = CircularArray<Int>(minimumCapacity: i)
+      let array = ArrayDeque<Int>(minimumCapacity: i)
       
       if i == 0 {
         XCTAssertEqual(0, array.capacity)
@@ -63,7 +63,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testInitialisesFromEmptyArrayLiteral() {
-    let array: CircularArray<Int> = []
+    let array: ArrayDeque<Int> = []
     
     XCTAssertEqual(0, array.capacity)
     XCTAssertEqual(0, array.count)
@@ -74,7 +74,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testInitialisesFromArrayLiteral() {
-    let array: CircularArray = [1, 2, 3]
+    let array: ArrayDeque = [1, 2, 3]
     
     XCTAssertEqual(4, array.capacity)
     XCTAssertEqual(3, array.count)
@@ -90,7 +90,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testInitialisesFromEmptySequence() {
-    let array = CircularArray<Int>([])
+    let array = ArrayDeque<Int>([])
     
     XCTAssertEqual(0, array.capacity)
     XCTAssertEqual(0, array.count)
@@ -101,7 +101,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testInitialisesFromSequence() {
-    let array = CircularArray<Int>([1, 2, 3])
+    let array = ArrayDeque<Int>([1, 2, 3])
     
     XCTAssertEqual(4, array.capacity)
     XCTAssertEqual(3, array.count)
@@ -117,7 +117,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testReservesCapacity() {
-    var array: CircularArray<Int> = []
+    var array: ArrayDeque<Int> = []
     
     var capacity = 0
     for i in 0..<32 {
@@ -131,7 +131,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testRemovesAll() {
-    var array: CircularArray = [1, 2, 3]
+    var array: ArrayDeque = [1, 2, 3]
     
     array.removeAll()
     XCTAssertEqual(0, array.capacity)
@@ -153,7 +153,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testAppending() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     array.append(1)
     XCTAssertEqual(2, array.capacity)
@@ -170,7 +170,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testAppendingSequence() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     array.appendContentsOf(AnySequence([1, 2, 3]))
     XCTAssertEqual(4, array.capacity)
@@ -187,7 +187,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testAppendingCollection() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     array.appendContentsOf([1, 2, 3])
     XCTAssertEqual(4, array.capacity)
@@ -204,7 +204,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testAppendingAndRemovingFirst() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     for i in 0..<16 {
       array.append(i)
@@ -226,7 +226,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testAppendingAndRemovingLast() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     for i in 0..<16 {
       array.append(i)
@@ -248,7 +248,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testPrepending() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     array.prepend(1)
     XCTAssertEqual(2, array.capacity)
@@ -265,7 +265,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testPrependingSequence() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     array.prependContentsOf(AnySequence([1, 2, 3]))
     XCTAssertEqual(4, array.capacity)
@@ -282,7 +282,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testPrependingCollection() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     array.prependContentsOf([1, 2, 3])
     XCTAssertEqual(4, array.capacity)
@@ -299,7 +299,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testPrependingAndRemovingFirst() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     for i in 0..<16 {
       array.prepend(i)
@@ -321,7 +321,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testPrependingAndRemovingLast() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     for i in 0..<16 {
       array.prepend(i)
@@ -343,7 +343,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testAppendingPrependingAndRemovingLast() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     // 0, 1, 2, 3, 4, 5
     array.append(3)
@@ -360,7 +360,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testAppendingPrependingAndRemovingFirst() {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     
     // 0, 1, 2, 3, 4, 5
     array.append(3)
@@ -377,7 +377,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testSubscripting() {
-    var array: CircularArray = [0, 0, 0]
+    var array: ArrayDeque = [0, 0, 0]
     
     for i in 0..<3 {
       array[i] = 1
@@ -398,13 +398,13 @@ class CircularArrayTests : XCTestCase {
   
   func testUnwrappedCopyOnWrite()
   {
-    let array: CircularArray = [1, 2, 3]
+    let array: ArrayDeque = [1, 2, 3]
     assertCopiesOnWrite(array)
   }
   
   func testWrappedCopyOnWrite()
   {
-    var array = CircularArray<Int>()
+    var array = ArrayDeque<Int>()
     array.prepend(3)
     array.prepend(2)
     array.prepend(1)
@@ -413,7 +413,7 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testUnsafeAdressing() {
-    var array: CircularArray = [1, 2, 3]
+    var array: ArrayDeque = [1, 2, 3]
     
     // test unwrapped buffer
     
@@ -462,12 +462,12 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testEquals() {
-    XCTAssertTrue(CircularArray<Int>() == [])
-    XCTAssertTrue([] == CircularArray<Int>([]))
-    XCTAssertTrue(CircularArray<Int>() == CircularArray<Int>([]))
+    XCTAssertTrue(ArrayDeque<Int>() == [])
+    XCTAssertTrue([] == ArrayDeque<Int>([]))
+    XCTAssertTrue(ArrayDeque<Int>() == ArrayDeque<Int>([]))
     
-    let array: CircularArray = [1, 2, 3]
-    var anotherArray: CircularArray = [1, 2]
+    let array: ArrayDeque = [1, 2, 3]
+    var anotherArray: ArrayDeque = [1, 2]
     XCTAssertTrue(array != anotherArray)
     
     anotherArray.append(3)
@@ -475,16 +475,16 @@ class CircularArrayTests : XCTestCase {
   }
   
   func testGetsDescriptions() {
-    var array: CircularArray<Int> = []
+    var array: ArrayDeque<Int> = []
     XCTAssertEqual(array.description, "[]")
-    XCTAssertEqual(array.debugDescription, "CircularArray([])")
+    XCTAssertEqual(array.debugDescription, "ArrayDeque([])")
     
     array = [1, 2]
     XCTAssertEqual(array.description, "[1, 2]")
-    XCTAssertEqual(array.debugDescription, "CircularArray([1, 2])")
+    XCTAssertEqual(array.debugDescription, "ArrayDeque([1, 2])")
   }
   
-  func assertCopiesOnWrite(array: CircularArray<Int>) {
+  func assertCopiesOnWrite(array: ArrayDeque<Int>) {
     // reserveCapacity(_:)
     var copy = array
     copy.reserveCapacity(array.capacity << 1)

@@ -1,5 +1,5 @@
 //
-// CircularArray.swift
+// ArrayDeque.swift
 // Collections
 //
 // Copyright (c) 2016 José Massada <jose.massada@gmail.com>
@@ -19,10 +19,10 @@
 
 /// A fast, double-ended queue of `Element` implemented with a modified dynamic
 /// array.
-public struct CircularArray<Element> : ArrayLiteralConvertible {
-  typealias Storage = CircularArrayBuffer<Element>
+public struct ArrayDeque<Element> : ArrayLiteralConvertible {
+  typealias Storage = ArrayDequeBuffer<Element>
   
-  /// Constructs an empty `CircularArray`.
+  /// Constructs an empty `ArrayDeque`.
   public init() {
     storage_ = Storage()
   }
@@ -59,10 +59,10 @@ public struct CircularArray<Element> : ArrayLiteralConvertible {
   var storage_: Storage
 }
 
-extension CircularArray : DequeCollectionType {
+extension ArrayDeque : DequeCollectionType {
   /// Reserve enough space to store `minimumCapacity` elements.
   ///
-  /// - Postcondition: `capacity >= minimumCapacity` and the circular array has
+  /// - Postcondition: `capacity >= minimumCapacity` and the array deque has
   ///   mutable contiguous storage.
   ///
   /// - Complexity: O(`self.count`).
@@ -71,7 +71,7 @@ extension CircularArray : DequeCollectionType {
     storage_.reserveCapacity(minimumCapacity)
   }
   
-  /// Prepends `newElement` to the `CircularArray`.
+  /// Prepends `newElement` to the `ArrayDeque`.
   ///
   /// Invalidates all indices with respect to `self`.
   ///
@@ -81,7 +81,7 @@ extension CircularArray : DequeCollectionType {
     storage_.prepend(newElement)
   }
   
-  /// Prepends the elements of `newElements` to the `CircularArray`.
+  /// Prepends the elements of `newElements` to the `ArrayDeque`.
   ///
   /// - Complexity: O(*length of `newElements`*).
   public mutating func prependContentsOf<
@@ -93,7 +93,7 @@ extension CircularArray : DequeCollectionType {
     }
   }
   
-  /// Prepends the elements of `newElements` to the `CircularArray`.
+  /// Prepends the elements of `newElements` to the `ArrayDeque`.
   ///
   /// - Complexity: O(*length of `newElements`*).
   public mutating func prependContentsOf<
@@ -105,7 +105,7 @@ extension CircularArray : DequeCollectionType {
       }
   }
   
-  /// Appends `newElement` to the `CircularArray`.
+  /// Appends `newElement` to the `ArrayDeque`.
   ///
   /// Applying `successor()` to the index of the new element yields
   /// `self.endIndex`.
@@ -116,7 +116,7 @@ extension CircularArray : DequeCollectionType {
     storage_.append(newElement)
   }
   
-  /// Appends the elements of `newElements` to the `CircularArray`.
+  /// Appends the elements of `newElements` to the `ArrayDeque`.
   ///
   /// - Complexity: O(*length of `newElements`*).
   public mutating func appendContentsOf<
@@ -128,7 +128,7 @@ extension CircularArray : DequeCollectionType {
     }
   }
   
-  /// Appends the elements of `newElements` to the `CircularArray`.
+  /// Appends the elements of `newElements` to the `ArrayDeque`.
   ///
   /// - Complexity: O(*length of `newElements`*).
   public mutating func appendContentsOf<
@@ -218,16 +218,16 @@ extension CircularArray : DequeCollectionType {
     }
   }
   
-  /// Creates a new storage if this circular array is not backed by a
+  /// Creates a new storage if this array deque is not backed by a
   /// uniquely-referenced mutable storage.
   mutating func makeUniqueMutableStorage() {
     if !isUniquelyReferencedNonObjC(&storage_) {
-      storage_ = CircularArrayBuffer(buffer: storage_)
+      storage_ = Storage(buffer: storage_)
     }
   }
 }
 
-extension CircularArray : Indexable, MutableIndexable {
+extension ArrayDeque : Indexable, MutableIndexable {
   /// A type that represents a valid position in the collection.
   ///
   /// Valid indices consist of the position of every element and a
@@ -267,7 +267,7 @@ extension CircularArray : Indexable, MutableIndexable {
   }
 }
 
-extension CircularArray
+extension ArrayDeque
   : CustomStringConvertible, CustomDebugStringConvertible {
   
   /// A textual representation of `self`.
@@ -277,12 +277,12 @@ extension CircularArray
   
   /// A textual representation of `self`, suitable for debugging.
   public var debugDescription: String {
-    return "CircularArray(\(description))"
+    return "ArrayDeque(\(description))"
   }
 }
 
-extension CircularArray {
-  /// Call `body(p)`, where `p` is a pointer to the `CircularArray`'s
+extension ArrayDeque {
+  /// Call `body(p)`, where `p` is a pointer to the `ArrayDeque`'s
   /// contiguous storage.
   ///
   /// Often, the optimizer can eliminate bounds checks within an
@@ -295,7 +295,7 @@ extension CircularArray {
       return try storage_.withUnsafeBufferPointer(body)
   }
   
-  /// Call `body(p)`, where `p` is a pointer to the `CircularArray`'s
+  /// Call `body(p)`, where `p` is a pointer to the `ArrayDeque`'s
   /// mutable contiguous storage.
   ///
   /// Often, the optimizer can eliminate bounds- and uniqueness-checks
@@ -303,7 +303,7 @@ extension CircularArray {
   /// same algorithm on `body`'s argument lets you trade safety for
   /// speed.
   ///
-  /// - Warning: Do not rely on anything about `self` (the `CircularArray`
+  /// - Warning: Do not rely on anything about `self` (the `ArrayDeque`
   ///   that is the target of this method) during the execution of
   ///   `body`: it may not appear to have its correct value.  Instead,
   ///   use only the `UnsafeMutableBufferPointer` argument to `body`.
@@ -313,7 +313,7 @@ extension CircularArray {
       let storage = storage_
       
       // move self into a temporary working array
-      var work = CircularArray()
+      var work = ArrayDeque()
       swap(&work, &self)
       
       // swap with the working array back before returning
@@ -324,18 +324,18 @@ extension CircularArray {
   }
 }
 
-/// Returns `true` if these circular arrays contain the same elements.
+/// Returns `true` if these array deques contain the same elements.
 @warn_unused_result
 public func ==<Element : Equatable>(
-  lhs: CircularArray<Element>, rhs: CircularArray<Element>
+  lhs: ArrayDeque<Element>, rhs: ArrayDeque<Element>
 ) -> Bool {
   return lhs.elementsEqual(rhs)
 }
 
-/// Returns `true` if these circular arrays do not contain the same elements.
+/// Returns `true` if these array deques do not contain the same elements.
 @warn_unused_result
 public func !=<Element : Equatable>(
-  lhs: CircularArray<Element>, rhs: CircularArray<Element>
+  lhs: ArrayDeque<Element>, rhs: ArrayDeque<Element>
 ) -> Bool {
   return !lhs.elementsEqual(rhs)
 }

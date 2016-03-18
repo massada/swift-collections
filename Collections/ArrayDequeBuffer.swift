@@ -1,5 +1,5 @@
 //
-// CircularArrayBuffer.swift
+// ArrayDequeBuffer.swift
 // Collections
 //
 // Copyright (c) 2016 José Massada <jose.massada@gmail.com>
@@ -17,7 +17,7 @@
 // limitations under the License.
 //
 
-class CircularArrayBuffer<Element> {
+class ArrayDequeBuffer<Element> {
   typealias Storage = UnsafeMutablePointer<Element>
   
   init() {
@@ -37,7 +37,7 @@ class CircularArrayBuffer<Element> {
     storage_ = Storage.alloc(capacity_)
   }
   
-  init(buffer: CircularArrayBuffer) {
+  init(buffer: ArrayDequeBuffer) {
     capacity_ = buffer.capacity
     storage_ = Storage.alloc(capacity_)
     

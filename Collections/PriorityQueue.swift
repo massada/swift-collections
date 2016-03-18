@@ -19,7 +19,7 @@
 
 /// A *collection* where `Element`s are kept ordered.
 public struct PriorityQueue<Element : Comparable> : ArrayLiteralConvertible {
-  typealias Storage = CircularArray<Element>
+  typealias Storage = ArrayDeque<Element>
   
   /// Constructs an empty `PriorityQueue` that orders its elements according
   /// to their natural ordering.

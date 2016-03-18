@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EB0F1FAE1C78D27F008FEE19 /* CircularArrayBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F1FAD1C78D27F008FEE19 /* CircularArrayBuffer.swift */; };
+		EB0F1FAE1C78D27F008FEE19 /* ArrayDequeBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F1FAD1C78D27F008FEE19 /* ArrayDequeBuffer.swift */; };
 		EB0F1FB01C790511008FEE19 /* Misc.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F1FAF1C790511008FEE19 /* Misc.swift */; };
 		EB0F1FB21C792FE8008FEE19 /* MiscTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F1FB11C792FE8008FEE19 /* MiscTests.swift */; };
 		EB2CC7C61C88BCBE00CAB433 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = EB2CC7C51C88BCBE00CAB433 /* LICENSE.txt */; };
@@ -27,8 +27,8 @@
 		EBBE62971C7F85B8002E6BD9 /* PriorityQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBBE62961C7F85B8002E6BD9 /* PriorityQueue.swift */; };
 		EBE36E761C553C4100FC3EAF /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE36E751C553C4100FC3EAF /* Stack.swift */; };
 		EBE36E781C554E0A00FC3EAF /* DequeCollectionType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE36E771C554E0A00FC3EAF /* DequeCollectionType.swift */; };
-		EBE36E7A1C554FCE00FC3EAF /* CircularArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE36E791C554FCE00FC3EAF /* CircularArray.swift */; };
-		EBE36E7E1C558D7F00FC3EAF /* CircularArrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE36E7D1C558D7F00FC3EAF /* CircularArrayTests.swift */; };
+		EBE36E7A1C554FCE00FC3EAF /* ArrayDeque.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE36E791C554FCE00FC3EAF /* ArrayDeque.swift */; };
+		EBE36E7E1C558D7F00FC3EAF /* ArrayDequeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBE36E7D1C558D7F00FC3EAF /* ArrayDequeTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,7 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		EB0F1FAD1C78D27F008FEE19 /* CircularArrayBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularArrayBuffer.swift; sourceTree = "<group>"; };
+		EB0F1FAD1C78D27F008FEE19 /* ArrayDequeBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayDequeBuffer.swift; sourceTree = "<group>"; };
 		EB0F1FAF1C790511008FEE19 /* Misc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Misc.swift; sourceTree = "<group>"; };
 		EB0F1FB11C792FE8008FEE19 /* MiscTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiscTests.swift; sourceTree = "<group>"; };
 		EB2CC7C51C88BCBE00CAB433 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -65,8 +65,8 @@
 		EBBE62961C7F85B8002E6BD9 /* PriorityQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriorityQueue.swift; sourceTree = "<group>"; };
 		EBE36E751C553C4100FC3EAF /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		EBE36E771C554E0A00FC3EAF /* DequeCollectionType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DequeCollectionType.swift; sourceTree = "<group>"; };
-		EBE36E791C554FCE00FC3EAF /* CircularArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularArray.swift; sourceTree = "<group>"; };
-		EBE36E7D1C558D7F00FC3EAF /* CircularArrayTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircularArrayTests.swift; sourceTree = "<group>"; };
+		EBE36E791C554FCE00FC3EAF /* ArrayDeque.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayDeque.swift; sourceTree = "<group>"; };
+		EBE36E7D1C558D7F00FC3EAF /* ArrayDequeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayDequeTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,8 +113,8 @@
 				EB68D9361C54554800D703C5 /* Collections.h */,
 				EB68D9381C54554800D703C5 /* Info.plist */,
 				EBE36E771C554E0A00FC3EAF /* DequeCollectionType.swift */,
-				EBE36E791C554FCE00FC3EAF /* CircularArray.swift */,
-				EB0F1FAD1C78D27F008FEE19 /* CircularArrayBuffer.swift */,
+				EBE36E791C554FCE00FC3EAF /* ArrayDeque.swift */,
+				EB0F1FAD1C78D27F008FEE19 /* ArrayDequeBuffer.swift */,
 				EBA11FC01C56B6F700ECC236 /* LinkedList.swift */,
 				EB9FC3F91C5AADDF00FF722A /* LinkedListIndex.swift */,
 				EB9FC3F71C5AAA5200FF722A /* LinkedListNode.swift */,
@@ -133,7 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				EB68D9441C54554800D703C5 /* Info.plist */,
-				EBE36E7D1C558D7F00FC3EAF /* CircularArrayTests.swift */,
+				EBE36E7D1C558D7F00FC3EAF /* ArrayDequeTests.swift */,
 				EBA11FC41C56C1D700ECC236 /* LinkedListTests.swift */,
 				EB9FC3F51C5838D900FF722A /* StackTests.swift */,
 				EB68D94F1C54559F00D703C5 /* QueueTests.swift */,
@@ -256,10 +256,10 @@
 				EBA11FC11C56B6F700ECC236 /* LinkedList.swift in Sources */,
 				EBA11FC91C580D2800ECC236 /* StackType.swift in Sources */,
 				EBBE62951C7F85AD002E6BD9 /* HeapType.swift in Sources */,
-				EB0F1FAE1C78D27F008FEE19 /* CircularArrayBuffer.swift in Sources */,
+				EB0F1FAE1C78D27F008FEE19 /* ArrayDequeBuffer.swift in Sources */,
 				EBA11FC71C58083100ECC236 /* QueueType.swift in Sources */,
 				EB0F1FB01C790511008FEE19 /* Misc.swift in Sources */,
-				EBE36E7A1C554FCE00FC3EAF /* CircularArray.swift in Sources */,
+				EBE36E7A1C554FCE00FC3EAF /* ArrayDeque.swift in Sources */,
 				EB68D94E1C54556000D703C5 /* Queue.swift in Sources */,
 				EBE36E761C553C4100FC3EAF /* Stack.swift in Sources */,
 				EB9FC3FA1C5AADDF00FF722A /* LinkedListIndex.swift in Sources */,
@@ -273,7 +273,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB9FC3F61C5838D900FF722A /* StackTests.swift in Sources */,
-				EBE36E7E1C558D7F00FC3EAF /* CircularArrayTests.swift in Sources */,
+				EBE36E7E1C558D7F00FC3EAF /* ArrayDequeTests.swift in Sources */,
 				EB0F1FB21C792FE8008FEE19 /* MiscTests.swift in Sources */,
 				EBA11FC51C56C1D700ECC236 /* LinkedListTests.swift in Sources */,
 				EB68D9501C54559F00D703C5 /* QueueTests.swift in Sources */,
