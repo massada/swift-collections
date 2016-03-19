@@ -101,9 +101,11 @@ class ArrayDequeBuffer<Element> {
     backIndex_ = count
     frontIndex_ = 0
     
-    storage_.dealloc(capacity_)
-    storage_ = newStorage
+    if capacity_ > 0 {
+      storage_.dealloc(capacity_)
+    }
     
+    storage_ = newStorage
     capacity_ = capacity
   }
   

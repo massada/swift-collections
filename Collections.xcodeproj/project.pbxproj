@@ -12,7 +12,6 @@
 		EB0F1FB21C792FE8008FEE19 /* MiscTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F1FB11C792FE8008FEE19 /* MiscTests.swift */; };
 		EB2CC7C61C88BCBE00CAB433 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = EB2CC7C51C88BCBE00CAB433 /* LICENSE.txt */; };
 		EB68D9371C54554800D703C5 /* Collections.h in Headers */ = {isa = PBXBuildFile; fileRef = EB68D9361C54554800D703C5 /* Collections.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB68D93E1C54554800D703C5 /* Collections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB68D9331C54554800D703C5 /* Collections.framework */; };
 		EB68D94E1C54556000D703C5 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB68D94D1C54556000D703C5 /* Queue.swift */; };
 		EB68D9501C54559F00D703C5 /* QueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB68D94F1C54559F00D703C5 /* QueueTests.swift */; };
 		EB92F85A1C81D2D70029E0BD /* PriorityQueueTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB92F8591C81D2D70029E0BD /* PriorityQueueTests.swift */; };
@@ -81,7 +80,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB68D93E1C54554800D703C5 /* Collections.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -331,7 +329,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
