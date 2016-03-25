@@ -195,56 +195,12 @@ class ArrayDequeBuffer<Element> {
     backIndex_ = newBackIndex
   }
   
-  func withUnsafeBufferPointer<R>(
-    @noescape body: (UnsafeBufferPointer<Element>) throws -> R
-  ) rethrows -> R {
-    unwrap()
-    
-    let pointer = UnsafeBufferPointer(start: storage_ + frontIndex_,
-      count: count)
-    
-    return try body(pointer)
-  }
-  
-  func withUnsafeMutableBufferPointer<R>(
-    @noescape body: (UnsafeMutableBufferPointer<Element>) throws -> R
-  ) rethrows -> R {
-    unwrap()
-    
-    let pointer = UnsafeMutableBufferPointer(start: storage_ + frontIndex_,
-      count: count)
-    
-    defer {
-      precondition(pointer.baseAddress == storage_ && pointer.count == count,
-        "replacing the storage is not allowed")
-    }
-    return try body(pointer)
-  }
-  
   var capacity: Int {
     return capacity_
   }
   
   var count: Int {
     return (backIndex_ &- frontIndex_) & (capacity_ &- 1)
-  }
-  
-  /// Unwraps the buffer.
-  func unwrap() {
-    if frontIndex_ <= backIndex_ {
-      return
-    }
-    
-    // move tail elements
-    let frontCount = capacity_ - frontIndex_
-    (storage_ + frontCount).moveInitializeBackwardFrom(storage_,
-      count: backIndex_)
-    
-    // move head elements
-    storage_.moveInitializeFrom(storage_ + frontIndex_, count: frontCount)
-    
-    backIndex_ = count
-    frontIndex_ = 0
   }
   
   var capacity_: Int = 0
