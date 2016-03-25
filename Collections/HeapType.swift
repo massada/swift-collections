@@ -20,7 +20,7 @@
 /// A *collection* where elements are kept in order.
 public protocol HeapType : SequenceType, ArrayLiteralConvertible {
   /// The type of element.
-  typealias Element : Comparable
+  associatedtype Element : Comparable
   
   /// Returns the number of elements.
   var count: Int { get }

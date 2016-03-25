@@ -20,7 +20,7 @@
 /// A *collection* that supports adding or removing elements from either the
 /// front or back.
 public protocol DequeCollectionType
-  : MutableCollectionType, MutableSliceable, ArrayLiteralConvertible
+  : MutableCollectionType, ArrayLiteralConvertible
 {
   /// A type that represents a valid position in the collection.
   ///
@@ -30,7 +30,7 @@ public protocol DequeCollectionType
   /// - Note: This associated type appears as a requirement in `Indexable`, but
   ///   is restated here with stricter constraints: in a `DequeCollectionType`,
   ///   the `Index` should also be a `BidirectionalIndexType`.
-  typealias Index : BidirectionalIndexType
+  associatedtype Index : BidirectionalIndexType
   
   /// A non-binding request to ensure `n` elements of available storage.
   ///

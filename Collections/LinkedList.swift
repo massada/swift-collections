@@ -277,7 +277,7 @@ extension LinkedList : SequenceType {
   /// - Complexity: O(1).
   public func generate() -> Generator {
     var index = startIndex
-    return anyGenerator {
+    return AnyGenerator {
       let value = index.node_.value_
       index = index.successor()
       return value

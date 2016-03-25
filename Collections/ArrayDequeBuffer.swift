@@ -21,7 +21,7 @@ class ArrayDequeBuffer<Element> {
   typealias Storage = UnsafeMutablePointer<Element>
   
   init() {
-    storage_ = Storage()
+    storage_ = nil
   }
   
   init(minimumCapacity: Int) {
