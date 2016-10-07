@@ -32,6 +32,11 @@ class LinkedListNode<Element> {
     previous_ = previous
   }
   
+  /// Returns `true` if `self` is the root node.
+  var isRoot: Bool {
+    return next_ === self
+  }
+  
   /// The value.
   var value_: Element!
   

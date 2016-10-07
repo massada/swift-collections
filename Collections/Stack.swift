@@ -19,7 +19,7 @@
 
 /// A fast, *collection* of `Element` that supports adding an element and
 /// removing the most recently added element.
-public struct Stack<Element> : ArrayLiteralConvertible {
+public struct Stack<Element> : ExpressibleByArrayLiteral {
   typealias Storage = ArrayDeque<Element>
   
   /// Constructs an empty `Stack`.
@@ -36,10 +36,8 @@ public struct Stack<Element> : ArrayLiteralConvertible {
   }
   
   /// Constructs from an arbitrary sequence with elements of type `Element`.
-  public init<
-    S : SequenceType where S.Generator.Element == Element
-  >(_ sequence: S) {
-    storage_ = Storage(minimumCapacity: sequence.underestimateCount())
+  public init<S : Sequence>(_ sequence: S) where S.Iterator.Element == Element {
+    storage_ = Storage(minimumCapacity: sequence.underestimatedCount)
     for element in sequence {
       storage_.prepend(element)
     }
@@ -67,14 +65,13 @@ extension Stack : StackType {
   /// Pushes `newElement` to `self`.
   ///
   /// - Complexity: amortised O(1).
-  public mutating func push(newElement: Element) {
+  public mutating func push(_ newElement: Element) {
     storage_.prepend(newElement)
   }
   
   /// Pops the most recently added element of `self` and returns it.
   ///
   /// - Compexity: O(1).
-  @warn_unused_result
   public mutating func pop() -> Element {
     return storage_.removeFirst()
   }
@@ -86,17 +83,16 @@ extension Stack : StackType {
   }
 }
 
-extension Stack : SequenceType {
+extension Stack : Sequence {
   /// A type that provides the `Stack`'s iteration interface and
   /// encapsulates its iteration state.
-  public typealias Generator = Storage.Generator
+  public typealias Iterator = Storage.Iterator
   
   /// Return a *generator* over the elements of the `Stack`.
   ///
   /// - Complexity: O(1).
-  @warn_unused_result
-  public func generate() -> Generator {
-    return storage_.generate()
+  public func makeIterator() -> Iterator {
+    return storage_.makeIterator()
   }
 }
 
@@ -113,7 +109,6 @@ extension Stack : CustomStringConvertible, CustomDebugStringConvertible {
 }
 
 /// Returns `true` if these stacks contain the same elements.
-@warn_unused_result
 public func ==<Element : Equatable>(
   lhs: Stack<Element>, rhs: Stack<Element>
 ) -> Bool {
@@ -121,7 +116,6 @@ public func ==<Element : Equatable>(
 }
 
 /// Returns `true` if these stacks do not contain the same elements.
-@warn_unused_result
 public func !=<Element : Equatable>(
   lhs: Stack<Element>, rhs: Stack<Element>
 ) -> Bool {

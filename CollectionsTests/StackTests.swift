@@ -52,7 +52,7 @@ class StackTests : XCTestCase {
     XCTAssertEqual(3, stack.count)
     XCTAssertEqual(3, stack.top)
     
-    for (i, element) in stack.enumerate() {
+    for (i, element) in stack.enumerated() {
       XCTAssertEqual(3 - i, element)
     }
   }
@@ -72,7 +72,7 @@ class StackTests : XCTestCase {
     XCTAssertEqual(3, stack.count)
     XCTAssertEqual(3, stack.top)
     
-    for (i, element) in stack.enumerate() {
+    for (i, element) in stack.enumerated() {
       XCTAssertEqual(3 - i, element)
     }
   }
@@ -145,7 +145,7 @@ class StackTests : XCTestCase {
   func testPushingPerformance() {
     var stack = Stack<Int>()
     
-    measureBlock {
+    measure {
       for i in 0..<100_000 {
         stack.push(i)
       }
@@ -155,7 +155,7 @@ class StackTests : XCTestCase {
   func testPushingPoppingPerformance() {
     var stack = Stack<Int>()
     
-    measureBlock {
+    measure {
       for i in 0..<100_000 {
         stack.push(i)
         XCTAssertEqual(i, stack.pop())

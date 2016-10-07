@@ -18,14 +18,12 @@
 //
 
 /// Returns `true` if `value` is a power of 2.
-@warn_unused_result
-public func isPowerOfTwo<T : IntegerType>(value: T) -> Bool {
+public func isPowerOfTwo<T : Integer>(_ value: T) -> Bool {
   return value > 0 && (value & (value &- 1)) == 0
 }
 
 /// Returns the `value`s nearest power of 2.
-@warn_unused_result
-public func nearestPowerOfTwo<T : IntegerType>(value: T) -> T {
+public func nearestPowerOfTwo<T : Integer>(_ value: T) -> T {
   var v: T = 1
   while (v < value) {
     v *= 2

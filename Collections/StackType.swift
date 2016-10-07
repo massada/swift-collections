@@ -19,7 +19,7 @@
 
 /// A *collection* that supports adding an element and removing the most
 /// recently added element.
-public protocol StackType : SequenceType, ArrayLiteralConvertible {
+public protocol StackType : Sequence, ExpressibleByArrayLiteral {
   /// Returns the number of elements.
   var count: Int { get }
   
@@ -30,15 +30,14 @@ public protocol StackType : SequenceType, ArrayLiteralConvertible {
   mutating func clear()
   
   /// Pushes `newElement` to `self`.
-  mutating func push(newElement: Generator.Element)
+  mutating func push(_ newElement: Iterator.Element)
   
   /// Pops the most recently added element of `self` and returns it.
-  @warn_unused_result
-  mutating func pop() -> Generator.Element
+  mutating func pop() -> Iterator.Element
   
   /// Returns the most recently added element of `self`, or `nil` if `self` is
   /// empty.
-  var top: Generator.Element? { get }
+  var top: Iterator.Element? { get }
 }
 
 // Default implementations

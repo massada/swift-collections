@@ -20,7 +20,7 @@
 /// A *collection* that supports adding or removing elements from either the
 /// front or back.
 public protocol DequeCollectionType
-  : MutableCollectionType, ArrayLiteralConvertible
+  : BidirectionalCollection, MutableCollection, ExpressibleByArrayLiteral
 {
   /// A type that represents a valid position in the collection.
   ///
@@ -30,7 +30,7 @@ public protocol DequeCollectionType
   /// - Note: This associated type appears as a requirement in `Indexable`, but
   ///   is restated here with stricter constraints: in a `DequeCollectionType`,
   ///   the `Index` should also be a `BidirectionalIndexType`.
-  associatedtype Index : BidirectionalIndexType
+  associatedtype Index : Comparable
   
   /// A non-binding request to ensure `n` elements of available storage.
   ///
@@ -38,56 +38,52 @@ public protocol DequeCollectionType
   /// linear data structures like `CircularArray`.  Conforming types may
   /// reserve more than `n`, exactly `n`, less than `n` elements of
   /// storage, or even ignore the request completely.
-  mutating func reserveCapacity(minimumCapacity: Int)
+  mutating func reserveCapacity(_ minimumCapacity: Int)
   
   /// Prepends `newElement` to `self`.
   ///
   /// Invalidates all indices with respect to `self`.
-  mutating func prepend(newElement: Generator.Element)
+  mutating func prepend(_ newElement: Iterator.Element)
   
   /// Prepends the elements of `newElements` to `self`.
   ///
   /// - Complexity: O(*length of `newElements`*).
-  mutating func prependContentsOf<
-    S : SequenceType where S.Generator.Element == Generator.Element
-  >(newElements: S)
+  mutating func prependContentsOf<S : Sequence>(_ newElements: S)
+    where S.Iterator.Element == Iterator.Element
   
   /// Appends `newElement` to `self`.
   ///
   /// Applying `successor()` to the index of the new element yields
   /// `self.endIndex`.
-  mutating func append(newElement: Generator.Element)
+  mutating func append(_ newElement: Iterator.Element)
   
   /// Appends the elements of `newElements` to `self`.
   ///
   /// - Complexity: O(*length of `newElements`*).
-  mutating func appendContentsOf<
-    S : SequenceType where S.Generator.Element == Generator.Element
-  >(newElements: S)
+  mutating func appendContentsOf<S : Sequence>(_ newElements: S)
+    where S.Iterator.Element == Iterator.Element
   
   /// Removes the element at `startIndex` and returns it.
   ///
   /// - Requires: `!self.isEmpty`.
-  @warn_unused_result
-  mutating func removeFirst() -> Generator.Element
+  mutating func removeFirst() -> Iterator.Element
   
   /// Removes the first `n` elements.
   ///
   /// - Complexity: O(`n`).
   /// - Requires: `n >= 0 && self.count >= n`.
-  mutating func removeFirst(n: Int)
+  mutating func removeFirst(_ n: Int)
   
   /// Removes the element at the end and returns it.
   ///
   /// - Requires: `!self.isEmpty`
-  @warn_unused_result
-  mutating func removeLast() -> Generator.Element
+  mutating func removeLast() -> Iterator.Element
   
   /// Removes the last `n` elements.
   ///
   /// - Complexity: O(`n`).
   /// - Requires: `n >= 0 && self.count >= n`.
-  mutating func removeLast(n: Int)
+  mutating func removeLast(_ n: Int)
   
   /// Removes all elements.
   ///
@@ -98,37 +94,36 @@ public protocol DequeCollectionType
   ///   when `self` is going to be grown again.
   ///
   /// - Complexity: O(`self.count`).
-  mutating func removeAll(keepCapacity keepCapacity: Bool)
+  mutating func removeAll(keepCapacity: Bool)
 }
 
 // Default implementations
 extension DequeCollectionType {
-  public mutating func reserveCapacity(minimumCapacity: Int) {
+  public mutating func reserveCapacity(_ minimumCapacity: Int) {
   }
   
-  public mutating func prependContentsOf<
-    S : SequenceType where S.Generator.Element == Generator.Element
-  >(newElements: S) {
-    for element in newElements.reverse() {
+  public mutating func prependContentsOf<S : Sequence>(_ newElements: S)
+    where S.Iterator.Element == Iterator.Element {
+    for element in newElements.reversed() {
       prepend(element)
     }
   }
   
-  public mutating func appendContentsOf<
-    S : SequenceType where S.Generator.Element == Generator.Element
-  >(newElements: S) {
+  public mutating func appendContentsOf<S : Sequence>(_ newElements: S)
+    where S.Iterator.Element == Iterator.Element {
     for element in newElements {
       append(element)
     }
   }
   
-  public mutating func removeFirst(n: Int) {
+  public mutating func removeFirst(_ n: Int) {
     if n == 0 {
       return
     }
     
     precondition(n >= 0, "number of elements to remove should be non-negative")
-    precondition(count >= numericCast(n),
+    precondition(
+      count >= numericCast(n),
       "can't remove more items from a collection than it contains")
     
     for _ in 0..<n {
@@ -136,13 +131,14 @@ extension DequeCollectionType {
     }
   }
   
-  public mutating func removeLast(n: Int) {
+  public mutating func removeLast(_ n: Int) {
     if n == 0 {
       return
     }
     
     precondition(n >= 0, "number of elements to remove should be non-negative")
-    precondition(count >= numericCast(n),
+    precondition(
+      count >= numericCast(n),
       "can't remove more items from a collection than it contains")
     
     for _ in 0..<n {
@@ -150,7 +146,7 @@ extension DequeCollectionType {
     }
   }
   
-  public mutating func removeAll(keepCapacity keepCapacity: Bool = false) {
+  public mutating func removeAll(keepCapacity: Bool = false) {
     if !keepCapacity {
       self = Self()
     }
@@ -165,12 +161,12 @@ extension DequeCollectionType where SubSequence == Self {
   ///
   /// - Complexity: O(1).
   /// - Requires: `!self.isEmpty`.
-  @warn_unused_result
-  public mutating func removeFirst() -> Generator.Element {
+  
+  public mutating func removeFirst() -> Iterator.Element {
     precondition(!isEmpty, "can't remove items from an empty collection")
     
     let element = first!
-    self = self[startIndex.successor()..<endIndex]
+    self = self[index(after: startIndex)..<endIndex]
     return element
   }
   
@@ -178,28 +174,29 @@ extension DequeCollectionType where SubSequence == Self {
   ///
   /// - Complexity: O(1).
   /// - Requires: `n >= 0 && self.count >= n`.
-  public mutating func removeFirst(n: Int) {
+  public mutating func removeFirst(_ n: Int) {
     if n == 0 {
       return
     }
     
     precondition(n >= 0, "number of elements to remove should be non-negative")
-    precondition(count >= numericCast(n),
+    precondition(
+      count >= numericCast(n),
       "can't remove more items from a collection than it contains")
     
-    self = self[startIndex.advancedBy(numericCast(n))..<endIndex]
+    self = self[index(startIndex, offsetBy: numericCast(n))..<endIndex]
   }
   
   /// Removes the element at the end and returns it.
   ///
   /// - Complexity: O(1).
   /// - Requires: `!self.isEmpty`.
-  @warn_unused_result
-  public mutating func removeLast() -> Generator.Element {
+  
+  public mutating func removeLast() -> Iterator.Element {
     precondition(!isEmpty, "can't remove items from an empty collection")
     
     let element = first!
-    self = self[startIndex..<endIndex.predecessor()]
+    self = self[startIndex..<index(before: endIndex)]
     return element
   }
   
@@ -207,15 +204,16 @@ extension DequeCollectionType where SubSequence == Self {
   ///
   /// - Complexity: O(1).
   /// - Requires: `n >= 0 && self.count >= n`.
-  public mutating func removeLast(n: Int) {
+  public mutating func removeLast(_ n: Int) {
     if n == 0 {
       return
     }
     
     precondition(n >= 0, "number of elements to remove should be non-negative")
-    precondition(count >= numericCast(n),
+    precondition(
+      count >= numericCast(n),
       "can't remove more items from a collection than it contains")
     
-    self = self[startIndex..<endIndex.advancedBy(-numericCast(n))]
+    self = self[startIndex..<index(endIndex, offsetBy: -numericCast(n))]
   }
 }

@@ -18,7 +18,7 @@
 //
 
 /// A *collection* where `Element`s are kept ordered.
-public struct PriorityQueue<Element : Comparable> : ArrayLiteralConvertible {
+public struct PriorityQueue<Element : Comparable> : ExpressibleByArrayLiteral {
   typealias Storage = ArrayDeque<Element>
   
   /// Constructs an empty `PriorityQueue` that orders its elements according
@@ -29,7 +29,7 @@ public struct PriorityQueue<Element : Comparable> : ArrayLiteralConvertible {
   
   /// Constructs a `PriorityQueue` that orders its elements according
   /// to the result of calling `isOrdered`.
-  public init(isOrdered: (Element, Element) -> Bool) {
+  public init(isOrdered: @escaping (Element, Element) -> Bool) {
     storage_ = Storage()
     isOrdered_ = isOrdered
   }
@@ -43,23 +43,21 @@ public struct PriorityQueue<Element : Comparable> : ArrayLiteralConvertible {
   
   /// Constructs from an arbitrary sequence with elements of type `Element`
   /// ordering according to the elements natural order.
-  public init<
-    S : SequenceType where S.Generator.Element == Element
-  >(_ sequence: S) {
+  public init<S : Sequence>(_ sequence: S) where S.Iterator.Element == Element {
     self.init(sequence, isOrdered: <)
   }
   
   /// Constructs from an arbitrary sequence with elements of type `Element`
   /// ordering according to the result of calling `isOrdered` over the
   /// elements.
-  public init<
-    S : SequenceType where S.Generator.Element == Element
-  >(_ sequence: S, isOrdered: (Element, Element) -> Bool) {
+  public init<S : Sequence>(
+    _ sequence: S, isOrdered: @escaping (Element, Element) -> Bool
+  ) where S.Iterator.Element == Element {
     storage_ = Storage(sequence)
     isOrdered_ = isOrdered
     
     let endIndex = count >> 1
-    for i in (0..<endIndex).reverse() {
+    for i in (0..<endIndex).reversed() {
       heapifyDown(i)
     }
   }
@@ -85,10 +83,10 @@ extension PriorityQueue : HeapType {
   /// Enqueues `newElement` to `self` while keeping priority order.
   ///
   /// - Complexity: O(log n).
-  public mutating func enqueue(newElement: Element) {
+  public mutating func enqueue(_ newElement: Element) {
     storage_.append(newElement)
     if count > 1 {
-      heapifyUp(storage_.endIndex - 1)
+      heapifyUp(storage_.endIndex &- 1)
     }
   }
   
@@ -96,7 +94,6 @@ extension PriorityQueue : HeapType {
   ///
   /// - Complexity: O(log n).
   /// - Requires: `self.count > 0`.
-  @warn_unused_result
   public mutating func dequeue() -> Element {
     precondition(count > 0)
     
@@ -104,7 +101,7 @@ extension PriorityQueue : HeapType {
       return storage_.removeFirst()
     }
     
-    swap(&storage_[0], &storage_[storage_.endIndex - 1])
+    swap(&storage_[0], &storage_[storage_.endIndex &- 1])
     
     let element = storage_.removeLast()
     heapifyDown(0)
@@ -118,12 +115,12 @@ extension PriorityQueue : HeapType {
   }
   
   /// Heapifies-up the storage.
-  mutating func heapifyUp(index: Int) {
+  mutating func heapifyUp(_ index: Int) {
     let element = storage_[index]
     
     var index = index
     while index > 0 {
-      let parentIndex = (index - 1) >> 1
+      let parentIndex = (index &- 1) >> 1
       let parentElement = storage_[parentIndex]
       
       if isOrdered_(parentElement, element) {
@@ -138,17 +135,17 @@ extension PriorityQueue : HeapType {
   }
   
   /// Heapifies-down the storage.
-  mutating func heapifyDown(index: Int) {
+  mutating func heapifyDown(_ index: Int) {
     let element = storage_[index]
     
     var index = index
     let endIndex = count >> 1
     
     while index < endIndex {
-      var childIndex = (index << 1) + 1
+      var childIndex = (index << 1) &+ 1
       var childElement = storage_[childIndex]
       
-      let rightIndex = childIndex + 1
+      let rightIndex = childIndex &+ 1
       if rightIndex < storage_.count &&
         isOrdered_(storage_[rightIndex], childElement)
       {
@@ -168,10 +165,10 @@ extension PriorityQueue : HeapType {
   }
 }
 
-extension PriorityQueue : SequenceType {
+extension PriorityQueue : Sequence {
   /// A type that provides the `PriorityQueue`'s iteration interface and
   /// encapsulates its iteration state.
-  public typealias Generator = Storage.Generator
+  public typealias Iterator = Storage.Iterator
   
   /// Return a *generator* over the elements of the `PriorityQueue`.
   ///
@@ -179,9 +176,8 @@ extension PriorityQueue : SequenceType {
   /// order.
   ///
   /// - Complexity: O(1).
-  @warn_unused_result
-  public func generate() -> Generator {
-    return storage_.generate()
+  public func makeIterator() -> Iterator {
+    return storage_.makeIterator()
   }
 }
 
@@ -200,7 +196,6 @@ extension PriorityQueue
 }
 
 /// Returns `true` if these priority queues contain the same elements.
-@warn_unused_result
 public func ==<Element>(
   lhs: PriorityQueue<Element>, rhs: PriorityQueue<Element>
 ) -> Bool {
@@ -208,7 +203,6 @@ public func ==<Element>(
 }
 
 /// Returns `true` if these priority queues do not contain the same elements.
-@warn_unused_result
 public func !=<Element>(
   lhs: PriorityQueue<Element>, rhs: PriorityQueue<Element>
 ) -> Bool {

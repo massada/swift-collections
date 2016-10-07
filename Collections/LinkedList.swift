@@ -20,18 +20,34 @@
 class LinkedListBox<Element> {
   typealias Index = LinkedListIndex<Element>
   
-  subscript(index: Index) -> Element {
-    get {
-      return index.node_.value_
-    }
-    set {
-      index.node_.value_ = newValue
+  var identity: UnsafeRawPointer {
+    return withUnsafePointer(to: &root_) {
+      return UnsafeRawPointer($0)
     }
   }
   
-  func insert(newElement: Element, atIndex index: Index) {
-    let newNode = LinkedListNode(value: newElement, next: index.node_,
-      previous: index.node_.previous_)
+  var startIndex: Index {
+    return LinkedListIndex<Element>(
+      identity: identity, node: root_.next_, offset: 0)
+  }
+  
+  var endIndex: Index {
+    return LinkedListIndex<Element>(
+      identity: identity, node: root_, offset: count_)
+  }
+  
+  subscript(index: Index) -> Element {
+    get {
+      return index.node.value_
+    }
+    set {
+      index.node.value_ = newValue
+    }
+  }
+  
+  func insert(_ newElement: Element, atIndex index: Index) {
+    let newNode = LinkedListNode(value: newElement, next: index.node,
+      previous: index.node.previous_)
     
     newNode.previous_.next_ = newNode
     newNode.next_.previous_ = newNode
@@ -39,30 +55,25 @@ class LinkedListBox<Element> {
     count_ += 1
   }
   
-  @warn_unused_result
-  func removeAtIndex(index: Index) -> Element {
-    let node = index.node_
+  func removeAtIndex(_ index: Index) -> Element {
+    let node = index.node
     let value = node.value_
     
     node.previous_.next_ = node.next_;
     node.next_.previous_ = node.previous_;
     
     count_ -= 1
-    return value
+    return value!
   }
   
-  var identity: UnsafePointer<Void> {
-    return withUnsafePointer(&root_) {
-      return UnsafePointer<Void>($0)
-    }
+  func index(after index: Index) -> Index {
+    return LinkedListIndex(
+      identity: identity, node: index.node.next_, offset: index.offset &+ 1)
   }
   
-  var startIndex: Index {
-    return LinkedListIndex<Element>(identity: identity, node: root_.next_)
-  }
-  
-  var endIndex: Index {
-    return LinkedListIndex<Element>(identity: identity, node: root_)
+  func index(before index: Index) -> Index {
+    return LinkedListIndex(
+      identity: identity, node: index.node.previous_, offset: index.offset &- 1)
   }
   
   /// The root node.
@@ -73,7 +84,7 @@ class LinkedListBox<Element> {
 }
 
 /// A doubly linked list of `Element`.
-public struct LinkedList<Element> : ArrayLiteralConvertible {
+public struct LinkedList<Element> : ExpressibleByArrayLiteral {
   /// Constructs an empty `LinkedList`.
   public init() {
   }
@@ -84,9 +95,7 @@ public struct LinkedList<Element> : ArrayLiteralConvertible {
   }
   
   /// Constructs from an arbitrary sequence with elements of type `Element`.
-  public init<
-    S : SequenceType where S.Generator.Element == Element
-  >(_ sequence: S) {
+  public init<S : Sequence>(_ sequence: S) where S.Iterator.Element == Element {
     for element in sequence {
       append(element)
     }
@@ -109,7 +118,7 @@ extension LinkedList : DequeCollectionType {
   /// Invalidates all indices with respect to `self`.
   ///
   /// - Complexity: O(1).
-  public mutating func prepend(newElement: Element) {
+  public mutating func prepend(_ newElement: Element) {
     insert(newElement, atIndex: startIndex)
   }
   
@@ -119,29 +128,32 @@ extension LinkedList : DequeCollectionType {
   /// `self.endIndex`.
   ///
   /// - Complexity: O(1).
-  public mutating func append(newElement: Element) {
+  public mutating func append(_ newElement: Element) {
     insert(newElement, atIndex: endIndex)
   }
   
   /// Inserts `newElement` at `index`.
   ///
   /// - Complexity: O(1).
-  public mutating func insert(newElement: Element, atIndex index: Index) {
+  public mutating func insert(_ newElement: Element, atIndex index: Index) {
     checkIndex(index)
     
-    if isUniquelyReferencedNonObjC(&box_) {
+    if isKnownUniquelyReferenced(&box_) {
       box_.insert(newElement, atIndex: index)
     } else {
       let newBox = LinkedListBox<Element>()
       
-      for i in startIndex..<index {
+      var i = startIndex
+      while i != index {
         newBox.insert(box_[i], atIndex: newBox.endIndex)
+        i = self.index(after: i)
       }
       
       newBox.insert(newElement, atIndex: newBox.endIndex)
       
-      for i in index..<endIndex {
+      while i != endIndex {
         newBox.insert(box_[i], atIndex: newBox.endIndex)
+        i = self.index(after: i)
       }
       
       box_ = newBox
@@ -152,7 +164,6 @@ extension LinkedList : DequeCollectionType {
   ///
   /// - Complexity: O(1).
   /// - Requires: `self.count > 0`.
-  @warn_unused_result
   public mutating func removeFirst() -> Element {
     return removeAtIndex(startIndex)
   }
@@ -161,31 +172,36 @@ extension LinkedList : DequeCollectionType {
   ///
   /// - Complexity: O(1).
   /// - Requires: `count > 0`
-  @warn_unused_result
   public mutating func removeLast() -> Element {
-    return removeAtIndex(endIndex.predecessor())
+    return removeAtIndex(index(before: endIndex))
   }
   
   /// Removes the element at `index` and returns it.
   ///
   /// - Complexity: O(1).
   /// - Requires: `count > 0`
-  public mutating func removeAtIndex(index: Index) -> Element {
+  public mutating func removeAtIndex(_ index: Index) -> Element {
     checkIndex(index)
     
     let value: Element
     
-    if isUniquelyReferencedNonObjC(&box_) {
+    if isKnownUniquelyReferenced(&box_) {
       return box_.removeAtIndex(index)
     } else {
       let newBox = LinkedListBox<Element>()
       
-      for i in startIndex..<index {
+      var i = startIndex
+      while i != index {
         newBox.insert(box_[i], atIndex: newBox.endIndex)
+        i = self.index(after: i)
       }
       
-      for i in index.successor()..<endIndex {
+      // Skip element to be removed
+      i = self.index(after: i)
+      
+      while i != endIndex {
         newBox.insert(box_[i], atIndex: newBox.endIndex)
+        i = self.index(after: i)
       }
       
       value = box_[index]
@@ -205,12 +221,12 @@ extension LinkedList : DequeCollectionType {
   /// - Postcondition: `capacity == 0` if `keepCapacity` is `false`.
   ///
   /// - Complexity: O(`self.count`).
-  public mutating func removeAll(keepCapacity keepCapacity: Bool = false) {
+  public mutating func removeAll(keepCapacity: Bool = false) {
     box_ = LinkedListBox<Element>()
   }
 }
 
-extension LinkedList : Indexable, MutableIndexable {
+extension LinkedList : BidirectionalCollection, MutableCollection {
   /// A type that represents a valid position in the collection.
   ///
   /// Valid indices consist of the position of every element and a
@@ -237,23 +253,25 @@ extension LinkedList : Indexable, MutableIndexable {
     get {
       checkIndex(index)
       return box_[index]
-    }
-    set {
+    } set {
       checkIndex(index)
       
-      if isUniquelyReferencedNonObjC(&box_) {
+      if isKnownUniquelyReferenced(&box_) {
         box_[index] = newValue
       } else {
         let newBox = LinkedListBox<Element>()
         
-        for i in startIndex..<index {
+        var i = startIndex
+        while i != index {
           newBox.insert(box_[i], atIndex: newBox.endIndex)
+          i = self.index(after: i)
         }
         
         newBox.insert(newValue, atIndex: newBox.endIndex)
         
-        for i in index..<endIndex {
+        while i != endIndex {
           newBox.insert(box_[i], atIndex: newBox.endIndex)
+          i = self.index(after: i)
         }
         
         box_ = newBox
@@ -261,25 +279,53 @@ extension LinkedList : Indexable, MutableIndexable {
     }
   }
   
+  public subscript(bounds: Range<Index>) -> BidirectionalSlice<LinkedList> {
+    get {
+      fatalError()
+    } set {
+      fatalError()
+    }
+  }
+  
+  /// Returns the position immediately after the given index.
+  ///
+  /// - Parameter i: A valid index of the collection. `i` must be less than
+  ///   `endIndex`.
+  /// - Returns: The index value immediately after `i`.
+  public func index(after index: Index) -> Index {
+    checkIndex(index)
+    return box_.index(after: index)
+  }
+  
+  /// Returns the position immediately before the given index.
+  ///
+  /// - Parameter i: A valid index of the collection. `i` must be greater than
+  ///   `startIndex`.
+  /// - Returns: The index value immediately before `i`.
+  public func index(before index: Index) -> Index {
+    checkIndex(index)
+    return box_.index(before: index)
+  }
+  
   /// Checks that the given `index` is valid.
-  func checkIndex(index: Index) {
-    precondition(index.identity_ == box_.identity)
+  func checkIndex(_ index: Index) {
+    precondition(index.identity == box_.identity)
   }
 }
 
-extension LinkedList : SequenceType {
+extension LinkedList : Sequence {
   /// A type that provides the `LinkedList`'s iteration interface and
   /// encapsulates its iteration state.
-  public typealias Generator = AnyGenerator<Element>
+  public typealias Iterator = AnyIterator<Element>
   
   /// Return a *generator* over the elements of the `LinkedList`.
   ///
   /// - Complexity: O(1).
-  public func generate() -> Generator {
+  public func makeIterator() -> Iterator {
     var index = startIndex
-    return AnyGenerator {
-      let value = index.node_.value_
-      index = index.successor()
+    return AnyIterator {
+      let value = index.node.value_
+      index = self.index(after: index)
       return value
     }
   }
@@ -298,7 +344,6 @@ extension LinkedList : CustomStringConvertible, CustomDebugStringConvertible {
 }
 
 /// Returns `true` if these linked lists contain the same elements.
-@warn_unused_result
 public func ==<Element : Equatable>(
   lhs: LinkedList<Element>, rhs: LinkedList<Element>
 ) -> Bool {
@@ -306,7 +351,6 @@ public func ==<Element : Equatable>(
 }
 
 /// Returns `true` if these linked lists do not contain the same elements.
-@warn_unused_result
 public func !=<Element : Equatable>(
   lhs: LinkedList<Element>, rhs: LinkedList<Element>
 ) -> Bool {

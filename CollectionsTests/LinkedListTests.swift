@@ -57,7 +57,7 @@ class LinkedListTests : XCTestCase {
     XCTAssertEqual(1, list.first)
     XCTAssertEqual(3, list.last)
     
-    for (i, element) in list.enumerate() {
+    for (i, element) in list.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -80,7 +80,7 @@ class LinkedListTests : XCTestCase {
     XCTAssertEqual(1, list.first)
     XCTAssertEqual(3, list.last)
     
-    for (i, element) in list.enumerate() {
+    for (i, element) in list.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -111,9 +111,9 @@ class LinkedListTests : XCTestCase {
     XCTAssertEqual(1, list.first)
     XCTAssertEqual(1, list.last)
     
-    for (i, element) in list.enumerate() {
+    for (i, element) in list.enumerated() {
       XCTAssertEqual(i + 1, element)
-      XCTAssertEqual(i + 1, list[list.startIndex.advancedBy(i)])
+      XCTAssertEqual(i + 1, list[list.index(list.startIndex, offsetBy: i)])
     }
   }
   
@@ -126,9 +126,9 @@ class LinkedListTests : XCTestCase {
     XCTAssertEqual(1, list.first)
     XCTAssertEqual(3, list.last)
     
-    for (i, element) in list.enumerate() {
+    for (i, element) in list.enumerated() {
       XCTAssertEqual(i + 1, element)
-      XCTAssertEqual(i + 1, list[list.startIndex.advancedBy(i)])
+      XCTAssertEqual(i + 1, list[list.index(list.startIndex, offsetBy: i)])
     }
   }
   
@@ -141,9 +141,9 @@ class LinkedListTests : XCTestCase {
     XCTAssertEqual(1, list.first)
     XCTAssertEqual(3, list.last)
     
-    for (i, element) in list.enumerate() {
+    for (i, element) in list.enumerated() {
       XCTAssertEqual(i + 1, element)
-      XCTAssertEqual(i + 1, list[list.startIndex.advancedBy(i)])
+      XCTAssertEqual(i + 1, list[list.index(list.startIndex, offsetBy: i)])
     }
   }
   
@@ -206,9 +206,9 @@ class LinkedListTests : XCTestCase {
     XCTAssertEqual(1, list.first)
     XCTAssertEqual(1, list.last)
     
-    for (i, element) in list.enumerate() {
+    for (i, element) in list.enumerated() {
       XCTAssertEqual(i + 1, element)
-      XCTAssertEqual(i + 1, list[list.startIndex.advancedBy(i)])
+      XCTAssertEqual(i + 1, list[list.index(list.startIndex, offsetBy: i)])
     }
   }
   
@@ -221,9 +221,9 @@ class LinkedListTests : XCTestCase {
     XCTAssertEqual(1, list.first)
     XCTAssertEqual(3, list.last)
     
-    for (i, element) in list.enumerate() {
+    for (i, element) in list.enumerated() {
       XCTAssertEqual(i + 1, element)
-      XCTAssertEqual(i + 1, list[list.startIndex.advancedBy(i)])
+      XCTAssertEqual(i + 1, list[list.index(list.startIndex, offsetBy: i)])
     }
   }
   
@@ -236,9 +236,9 @@ class LinkedListTests : XCTestCase {
     XCTAssertEqual(1, list.first)
     XCTAssertEqual(3, list.last)
     
-    for (i, element) in list.enumerate() {
+    for (i, element) in list.enumerated() {
       XCTAssertEqual(i + 1, element)
-      XCTAssertEqual(i + 1, list[list.startIndex.advancedBy(i)])
+      XCTAssertEqual(i + 1, list[list.index(list.startIndex, offsetBy: i)])
     }
   }
   
@@ -300,7 +300,7 @@ class LinkedListTests : XCTestCase {
     list.prepend(0)
     XCTAssertEqual(6, list.count)
     
-    for i in (0..<6).reverse() {
+    for i in (0..<6).reversed() {
       XCTAssertEqual(i, list.removeLast())
     }
   }
@@ -325,19 +325,25 @@ class LinkedListTests : XCTestCase {
   func testSubscripting() {
     var list: LinkedList = [0, 0, 0]
     
-    for i in list.startIndex..<list.endIndex {
+    list[list.startIndex] = 1
+    
+    var i = list.startIndex
+    while i != list.endIndex {
       list[i] = 1
+      i = list.index(after: i)
     }
     
-    for i in list.startIndex..<list.endIndex {
+    for i in list.indices {
       XCTAssertEqual(1, list[i])
     }
     
-    for i in list.startIndex..<list.endIndex {
+    i = list.startIndex
+    while i != list.endIndex {
       list[i] = 0
+      i = list.index(after: i)
     }
     
-    for i in list.startIndex..<list.endIndex {
+    for i in list.indices {
       XCTAssertEqual(0, list[i])
     }
   }
@@ -382,17 +388,17 @@ class LinkedListTests : XCTestCase {
     
     // insert(_:atIndex:)
     copy = list
-    copy.insert(0, atIndex: copy.startIndex.successor())
+    copy.insert(0, atIndex: copy.index(after: copy.startIndex))
     XCTAssertTrue(copy != list)
     
     // removeAtIndex(_:)
     copy = list
-    copy.removeAtIndex(copy.startIndex.successor())
+    _ = copy.removeAtIndex(copy.index(after: copy.startIndex))
     XCTAssertTrue(copy != list)
     
     // subscript setter
     copy = list
-    copy[copy.startIndex.successor()] = 0
+    copy[copy.index(after: copy.startIndex)] = 0
     XCTAssertTrue(copy != list)
   }
   

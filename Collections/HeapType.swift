@@ -18,7 +18,7 @@
 //
 
 /// A *collection* where elements are kept in order.
-public protocol HeapType : SequenceType, ArrayLiteralConvertible {
+public protocol HeapType : Sequence, ExpressibleByArrayLiteral {
   /// The type of element.
   associatedtype Element : Comparable
   
@@ -32,17 +32,16 @@ public protocol HeapType : SequenceType, ArrayLiteralConvertible {
   mutating func clear()
   
   /// Enqueues `newElement` to `self` while keeping priority order.
-  mutating func enqueue(newElement: Generator.Element)
+  mutating func enqueue(_ newElement: Iterator.Element)
   
   /// Dequeues the highest/lowest priority element of `self` and returns it.
   ///
   /// - Requires: `self.count > 0`.
-  @warn_unused_result
-  mutating func dequeue() -> Generator.Element
+  mutating func dequeue() -> Iterator.Element
   
   /// Returns the highest/lowest priority element of `self`, or `nil` if
   /// `self` is empty.
-  var front: Generator.Element? { get }
+  var front: Iterator.Element? { get }
 }
 
 // Default implementations

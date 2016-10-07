@@ -18,27 +18,21 @@
 //
 
 /// A `LinkedList` index.
-public struct LinkedListIndex<Element> : BidirectionalIndexType {
+public struct LinkedListIndex<Element> : Comparable {
   /// The owning identity.
-  let identity_: UnsafePointer<Void>
+  let identity: UnsafeRawPointer
   
   /// The linked list node.
-  let node_: LinkedListNode<Element>
+  let node: LinkedListNode<Element>
   
-  /// Returns the previous consecutive index.
-  public func predecessor() -> LinkedListIndex {
-    return LinkedListIndex(identity: identity_, node: node_.previous_)
-  }
+  /// The linked list node offset.
+  let offset: Int
   
-  /// Returns the next consecutive index.
-  public func successor() -> LinkedListIndex {
-    return LinkedListIndex(identity: identity_, node: node_.next_)
-  }
-  
-  /// Constructs from `identity` and `node`.
-  init(identity: UnsafePointer<Void>, node: LinkedListNode<Element>) {
-    identity_ = identity
-    node_ = node
+  /// Constructs from `identity`, `node` and `offset`.
+  init(identity: UnsafeRawPointer, node: LinkedListNode<Element>, offset: Int) {
+    self.identity = identity
+    self.node = node
+    self.offset = offset
   }
 }
 
@@ -46,5 +40,13 @@ public struct LinkedListIndex<Element> : BidirectionalIndexType {
 public func ==<Element>(
   lhs: LinkedListIndex<Element>, rhs: LinkedListIndex<Element>
 ) -> Bool {
-  return lhs.node_ === rhs.node_
+  return lhs.node === rhs.node
+}
+
+/// Returns `true` if the first linked list index argument is less than the
+/// second.
+public func <<Element>(
+  lhs: LinkedListIndex<Element>, rhs: LinkedListIndex<Element>
+) -> Bool {
+  return lhs.offset < rhs.offset
 }

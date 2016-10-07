@@ -19,7 +19,7 @@
 
 /// A fast, double-ended queue of `Element` implemented with a modified dynamic
 /// array.
-public struct ArrayDeque<Element> : ArrayLiteralConvertible {
+public struct ArrayDeque<Element> : ExpressibleByArrayLiteral {
   typealias Storage = ArrayDequeBuffer<Element>
   
   /// Constructs an empty `ArrayDeque`.
@@ -42,9 +42,9 @@ public struct ArrayDeque<Element> : ArrayLiteralConvertible {
   
   /// Constructs from an arbitrary sequence with elements of type `Element`.
   public init<
-    S : SequenceType where S.Generator.Element == Element
-  >(_ sequence: S) {
-    storage_ = Storage(minimumCapacity: sequence.underestimateCount())
+    S : Sequence>(_ sequence: S) where S.Iterator.Element == Element
+   {
+    storage_ = Storage(minimumCapacity: sequence.underestimatedCount)
     for element in sequence {
       storage_.append(element)
     }
@@ -66,7 +66,7 @@ extension ArrayDeque : DequeCollectionType {
   ///   mutable contiguous storage.
   ///
   /// - Complexity: O(`self.count`).
-  public mutating func reserveCapacity(minimumCapacity: Int) {
+  public mutating func reserveCapacity(_ minimumCapacity: Int) {
     makeUniqueMutableStorage()
     storage_.reserveCapacity(minimumCapacity)
   }
@@ -76,7 +76,7 @@ extension ArrayDeque : DequeCollectionType {
   /// Invalidates all indices with respect to `self`.
   ///
   /// - Complexity: amortized O(1).
-  public mutating func prepend(newElement: Element) {
+  public mutating func prepend(_ newElement: Element) {
     makeUniqueMutableStorage()
     storage_.prepend(newElement)
   }
@@ -85,10 +85,10 @@ extension ArrayDeque : DequeCollectionType {
   ///
   /// - Complexity: O(*length of `newElements`*).
   public mutating func prependContentsOf<
-    S : SequenceType where S.Generator.Element == Element
-  >(newElements: S) {
-    reserveCapacity(newElements.underestimateCount())
-    for element in newElements.reverse() {
+    S : Sequence>(_ newElements: S) where S.Iterator.Element == Element
+   {
+    reserveCapacity(newElements.underestimatedCount)
+    for element in newElements.reversed() {
       storage_.prepend(element)
     }
   }
@@ -97,10 +97,10 @@ extension ArrayDeque : DequeCollectionType {
   ///
   /// - Complexity: O(*length of `newElements`*).
   public mutating func prependContentsOf<
-    C : CollectionType where C.Generator.Element == Element
-  >(newElements: C) {
+    C : Collection>(_ newElements: C) where C.Iterator.Element == Element
+   {
     reserveCapacity(numericCast(newElements.count))
-    for element in newElements.reverse() {
+    for element in newElements.reversed() {
       storage_.prepend(element)
     }
   }
@@ -111,7 +111,7 @@ extension ArrayDeque : DequeCollectionType {
   /// `self.endIndex`.
   ///
   /// - Complexity: amortized O(1).
-  public mutating func append(newElement: Element) {
+  public mutating func append(_ newElement: Element) {
     makeUniqueMutableStorage()
     storage_.append(newElement)
   }
@@ -120,9 +120,9 @@ extension ArrayDeque : DequeCollectionType {
   ///
   /// - Complexity: O(*length of `newElements`*).
   public mutating func appendContentsOf<
-    S : SequenceType where S.Generator.Element == Element
-  >(newElements: S) {
-    reserveCapacity(newElements.underestimateCount())
+    S : Sequence>(_ newElements: S) where S.Iterator.Element == Element
+   {
+    reserveCapacity(newElements.underestimatedCount)
     for element in newElements {
       storage_.append(element)
     }
@@ -132,8 +132,8 @@ extension ArrayDeque : DequeCollectionType {
   ///
   /// - Complexity: O(*length of `newElements`*).
   public mutating func appendContentsOf<
-    C : CollectionType where C.Generator.Element == Element
-  >(newElements: C) {
+    C : Collection>(_ newElements: C) where C.Iterator.Element == Element
+   {
     reserveCapacity(numericCast(newElements.count))
     for element in newElements {
       storage_.append(element)
@@ -144,7 +144,6 @@ extension ArrayDeque : DequeCollectionType {
   ///
   /// - Complexity: O(1).
   /// - Requires: `self.count > 0`.
-  @warn_unused_result
   public mutating func removeFirst() -> Element {
     precondition(count > 0, "can't remove items from an empty collection")
     
@@ -156,7 +155,7 @@ extension ArrayDeque : DequeCollectionType {
   ///
   /// - Complexity: O(`n`).
   /// - Requires: `n >= 0 && self.count >= n`.
-  public mutating func removeFirst(n: Int) {
+  public mutating func removeFirst(_ n: Int) {
     if n == 0 {
       return
     }
@@ -173,7 +172,6 @@ extension ArrayDeque : DequeCollectionType {
   ///
   /// - Complexity: O(1).
   /// - Requires: `count > 0`.
-  @warn_unused_result
   public mutating func removeLast() -> Element {
     precondition(count > 0, "can't remove items from an empty collection")
     
@@ -185,7 +183,7 @@ extension ArrayDeque : DequeCollectionType {
   ///
   /// - Complexity: O(`n`).
   /// - Requires: `n >= 0 && self.count >= n`.
-  public mutating func removeLast(n: Int) {
+  public mutating func removeLast(_ n: Int) {
     if n == 0 {
       return
     }
@@ -209,8 +207,8 @@ extension ArrayDeque : DequeCollectionType {
   /// - Postcondition: `capacity == 0` if `keepCapacity` is `false`.
   ///
   /// - Complexity: O(`self.count`).
-  public mutating func removeAll(keepCapacity keepCapacity: Bool = false) {
-    if !isUniquelyReferencedNonObjC(&storage_) {
+  public mutating func removeAll(keepCapacity: Bool = false) {
+    if !isKnownUniquelyReferenced(&storage_) {
       let capacity = (keepCapacity) ? storage_.capacity : 0
       storage_ = Storage(minimumCapacity: capacity)
     } else {
@@ -221,13 +219,13 @@ extension ArrayDeque : DequeCollectionType {
   /// Creates a new storage if this array deque is not backed by a
   /// uniquely-referenced mutable storage.
   mutating func makeUniqueMutableStorage() {
-    if !isUniquelyReferencedNonObjC(&storage_) {
+    if !isKnownUniquelyReferenced(&storage_) {
       storage_ = Storage(buffer: storage_)
     }
   }
 }
 
-extension ArrayDeque : Indexable, MutableIndexable {
+extension ArrayDeque : BidirectionalCollection, MutableCollection {
   /// A type that represents a valid position in the collection.
   ///
   /// Valid indices consist of the position of every element and a
@@ -261,8 +259,36 @@ extension ArrayDeque : Indexable, MutableIndexable {
     }
   }
   
+  public subscript(bounds: Range<Index>) -> BidirectionalSlice<ArrayDeque> {
+    get {
+      fatalError()
+    } set {
+      fatalError()
+    }
+  }
+  
+  /// Returns the position immediately after the given index.
+  ///
+  /// - Parameter i: A valid index of the collection. `i` must be less than
+  ///   `endIndex`.
+  /// - Returns: The index value immediately after `i`.
+  public func index(after i: Index) -> Index {
+    checkIndex(i)
+    return i + 1
+  }
+  
+  /// Returns the position immediately before the given index.
+  ///
+  /// - Parameter i: A valid index of the collection. `i` must be greater than
+  ///   `startIndex`.
+  /// - Returns: The index value immediately before `i`.
+  public func index(before i: Index) -> Index {
+    checkIndex(i)
+    return i - 1
+  }
+  
   /// Checks that the given `index` is valid.
-  func checkIndex(index: Index) {
+  func checkIndex(_ index: Index) {
     precondition(index >= startIndex && index <= endIndex, "index out of range")
   }
 }
@@ -280,7 +306,6 @@ extension ArrayDeque : CustomStringConvertible, CustomDebugStringConvertible {
 }
 
 /// Returns `true` if these array deques contain the same elements.
-@warn_unused_result
 public func ==<Element : Equatable>(
   lhs: ArrayDeque<Element>, rhs: ArrayDeque<Element>
 ) -> Bool {
@@ -288,7 +313,6 @@ public func ==<Element : Equatable>(
 }
 
 /// Returns `true` if these array deques do not contain the same elements.
-@warn_unused_result
 public func !=<Element : Equatable>(
   lhs: ArrayDeque<Element>, rhs: ArrayDeque<Element>
 ) -> Bool {

@@ -19,7 +19,7 @@
 
 /// A fast, *collection* where `Element`s are kept in order. Supports adding an
 /// element to the head and removing the oldest added element from the front.
-public struct Queue<Element> : ArrayLiteralConvertible {
+public struct Queue<Element> : ExpressibleByArrayLiteral {
   typealias Storage = ArrayDeque<Element>
   
   /// Constructs an empty `Queue`.
@@ -33,9 +33,7 @@ public struct Queue<Element> : ArrayLiteralConvertible {
   }
   
   /// Constructs from an arbitrary sequence with elements of type `Element`.
-  public init<
-    S : SequenceType where S.Generator.Element == Element
-  >(_ sequence: S) {
+  public init<S : Sequence>(_ sequence: S) where S.Iterator.Element == Element {
     storage_ = Storage(sequence)
   }
   
@@ -57,7 +55,7 @@ extension Queue : QueueType {
   /// Enqueues `newElement` to `self`.
   ///
   /// - Complexity: amortised O(1).
-  public mutating func enqueue(newElement: Element) {
+  public mutating func enqueue(_ newElement: Element) {
     storage_.append(newElement)
   }
   
@@ -65,7 +63,6 @@ extension Queue : QueueType {
   ///
   /// - Complexity: O(1).
   /// - Requires: `self.count > 0`.
-  @warn_unused_result
   public mutating func dequeue() -> Element {
     precondition(count > 0)
     return storage_.removeFirst()
@@ -78,17 +75,16 @@ extension Queue : QueueType {
   }
 }
 
-extension Queue : SequenceType {
+extension Queue : Sequence {
   /// A type that provides the `Queue`'s iteration interface and
   /// encapsulates its iteration state.
-  public typealias Generator = Storage.Generator
+  public typealias Iterator = Storage.Iterator
   
   /// Return a *generator* over the elements of the `Queue`.
   ///
   /// - Complexity: O(1).
-  @warn_unused_result
-  public func generate() -> Generator {
-    return storage_.generate()
+  public func makeIterator() -> Iterator {
+    return storage_.makeIterator()
   }
 }
 
@@ -105,7 +101,6 @@ extension Queue : CustomStringConvertible, CustomDebugStringConvertible {
 }
 
 /// Returns `true` if these queues contain the same elements.
-@warn_unused_result
 public func ==<Element : Equatable>(
   lhs: Queue<Element>, rhs: Queue<Element>
 ) -> Bool {
@@ -113,7 +108,6 @@ public func ==<Element : Equatable>(
 }
 
 /// Returns `true` if these queues do not contain the same elements.
-@warn_unused_result
 public func !=<Element : Equatable>(
   lhs: Queue<Element>, rhs: Queue<Element>
 ) -> Bool {

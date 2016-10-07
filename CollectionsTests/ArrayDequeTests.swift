@@ -84,7 +84,7 @@ class ArrayDequeTests : XCTestCase {
     XCTAssertEqual(0, array.startIndex)
     XCTAssertEqual(3, array.endIndex)
     
-    for (i, element) in array.enumerate() {
+    for (i, element) in array.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -111,7 +111,7 @@ class ArrayDequeTests : XCTestCase {
     XCTAssertEqual(0, array.startIndex)
     XCTAssertEqual(3, array.endIndex)
     
-    for (i, element) in array.enumerate() {
+    for (i, element) in array.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -164,7 +164,7 @@ class ArrayDequeTests : XCTestCase {
     XCTAssertEqual(0, array.startIndex)
     XCTAssertEqual(1, array.endIndex)
     
-    for (i, element) in array.enumerate() {
+    for (i, element) in array.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -181,7 +181,7 @@ class ArrayDequeTests : XCTestCase {
     XCTAssertEqual(0, array.startIndex)
     XCTAssertEqual(3, array.endIndex)
     
-    for (i, element) in array.enumerate() {
+    for (i, element) in array.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -198,7 +198,7 @@ class ArrayDequeTests : XCTestCase {
     XCTAssertEqual(0, array.startIndex)
     XCTAssertEqual(3, array.endIndex)
     
-    for (i, element) in array.enumerate() {
+    for (i, element) in array.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -276,7 +276,7 @@ class ArrayDequeTests : XCTestCase {
     XCTAssertEqual(0, array.startIndex)
     XCTAssertEqual(3, array.endIndex)
     
-    for (i, element) in array.enumerate() {
+    for (i, element) in array.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -293,7 +293,7 @@ class ArrayDequeTests : XCTestCase {
     XCTAssertEqual(0, array.startIndex)
     XCTAssertEqual(3, array.endIndex)
     
-    for (i, element) in array.enumerate() {
+    for (i, element) in array.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -354,7 +354,7 @@ class ArrayDequeTests : XCTestCase {
     array.prepend(0)
     XCTAssertEqual(6, array.count)
     
-    for i in (0..<6).reverse() {
+    for i in (0..<6).reversed() {
       XCTAssertEqual(i, array.removeLast())
     }
   }
@@ -435,7 +435,7 @@ class ArrayDequeTests : XCTestCase {
     XCTAssertEqual(array.debugDescription, "ArrayDeque([1, 2])")
   }
   
-  func assertCopiesOnWrite(array: ArrayDeque<Int>) {
+  func assertCopiesOnWrite(_ array: ArrayDeque<Int>) {
     // reserveCapacity(_:)
     var copy = array
     copy.reserveCapacity(array.capacity << 1)

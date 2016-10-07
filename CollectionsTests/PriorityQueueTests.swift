@@ -68,7 +68,7 @@ class PriorityQueueTests : XCTestCase {
     XCTAssertEqual(3, queue.count)
     XCTAssertEqual(1, queue.front)
     
-    for (i, element) in queue.enumerate() {
+    for (i, element) in queue.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -104,7 +104,7 @@ class PriorityQueueTests : XCTestCase {
     XCTAssertEqual(3, queue.count)
     XCTAssertEqual(1, queue.front)
     
-    for (i, element) in queue.enumerate() {
+    for (i, element) in queue.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -116,7 +116,7 @@ class PriorityQueueTests : XCTestCase {
     XCTAssertEqual(3, queue.count)
     XCTAssertEqual(1, queue.front)
     
-    for (i, element) in queue.enumerate() {
+    for (i, element) in queue.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -128,7 +128,7 @@ class PriorityQueueTests : XCTestCase {
     XCTAssertEqual(3, queue.count)
     XCTAssertEqual(3, queue.front)
     
-    for (i, element) in queue.enumerate() {
+    for (i, element) in queue.enumerated() {
       XCTAssertEqual(3 - i, element)
     }
   }
@@ -162,7 +162,7 @@ class PriorityQueueTests : XCTestCase {
     XCTAssertEqual(3, queue.count)
     XCTAssertEqual(1, queue.front)
     
-    for (i, element) in queue.enumerate() {
+    for (i, element) in queue.enumerated() {
       XCTAssertEqual(i + 1, element)
     }
   }
@@ -233,8 +233,8 @@ class PriorityQueueTests : XCTestCase {
   func testPushingPerformance() {
     var queue = PriorityQueue<Int>()
     
-    measureBlock {
-      for i in 0..<100_000 {
+    measure {
+      for i in 0..<10_000 {
         queue.enqueue(i)
       }
     }
@@ -243,8 +243,8 @@ class PriorityQueueTests : XCTestCase {
   func testPushingPoppingPerformance() {
     var queue = PriorityQueue<Int>()
     
-    measureBlock {
-      for i in 0..<100_000 {
+    measure {
+      for i in 0..<10_000 {
         queue.enqueue(i)
         XCTAssertEqual(i, queue.dequeue())
       }

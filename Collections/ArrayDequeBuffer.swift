@@ -34,25 +34,25 @@ class ArrayDequeBuffer<Element> {
     }
     
     capacity_ = capacity
-    storage_ = Storage.alloc(capacity_)
+    storage_ = Storage.allocate(capacity: capacity_)
   }
   
   init(buffer: ArrayDequeBuffer) {
     capacity_ = buffer.capacity
-    storage_ = Storage.alloc(capacity_)
+    storage_ = Storage.allocate(capacity: capacity_)
     
     if buffer.frontIndex_ <= buffer.backIndex_ {
-      storage_.initializeFrom(buffer.storage_ + buffer.frontIndex_,
-        count: buffer.count)
+      storage_?.initialize(
+        from: buffer.storage_! + buffer.frontIndex_, count: buffer.count)
     } else {
       // initialise head elements
       let frontCount = buffer.capacity_ &- buffer.frontIndex_
-      storage_.initializeFrom(buffer.storage_ + buffer.frontIndex_,
-        count: frontCount)
+      storage_?.initialize(
+        from: buffer.storage_! + buffer.frontIndex_, count: frontCount)
       
       // initialise tail elements
-      (storage_ + frontCount).initializeFrom(buffer.storage_,
-        count: buffer.backIndex_)
+      (storage_! + frontCount).initialize(
+        from: buffer.storage_!, count: buffer.backIndex_)
     }
     
     backIndex_ = buffer.count
@@ -65,14 +65,14 @@ class ArrayDequeBuffer<Element> {
   subscript(index: Int) -> Element {
     get {
       let i = (frontIndex_ &+ index) & (capacity_ &- 1)
-      return storage_[i]
+      return storage_![i]
     } set {
       let i = (frontIndex_ &+ index) & (capacity_ &- 1)
-      storage_[i] = newValue
+      storage_?[i] = newValue
     }
   }
   
-  func reserveCapacity(minimumCapacity: Int) {
+  func reserveCapacity(_ minimumCapacity: Int) {
     if minimumCapacity <= capacity_ {
       return
     }
@@ -83,92 +83,96 @@ class ArrayDequeBuffer<Element> {
     }
     
     // allocate new storage
-    let newStorage = Storage.alloc(capacity)
+    let newStorage = Storage.allocate(capacity: capacity)
     
-    // move elements
-    if frontIndex_ <= backIndex_ {
-      newStorage.moveInitializeFrom(storage_ + frontIndex_, count: count)
-    } else {
-      // move head elements
-      let frontCount = capacity_ - frontIndex_
-      newStorage.moveInitializeFrom(storage_ + frontIndex_, count: frontCount)
+    if (storage_ != nil) {
+      // move elements
+      if frontIndex_ <= backIndex_ {
+        newStorage.moveInitialize(from: storage_! + frontIndex_, count: count)
+      } else {
+        // move head elements
+        let frontCount = capacity_ - frontIndex_
+        newStorage.moveInitialize(
+          from: storage_! + frontIndex_, count: frontCount)
+        
+        // move tail elements
+        (newStorage + frontCount).moveInitialize(
+          from: storage_!, count: backIndex_)
+      }
       
-      // move tail elements
-      (newStorage + frontCount).moveInitializeFrom(storage_, count: backIndex_)
-    }
-    
-    // update members
-    backIndex_ = count
-    frontIndex_ = 0
-    
-    if capacity_ > 0 {
-      storage_.dealloc(capacity_)
+      // update members
+      backIndex_ = count
+      frontIndex_ = 0
+      
+      if capacity_ > 0 {
+        storage_?.deallocate(capacity: capacity_)
+      }
     }
     
     storage_ = newStorage
     capacity_ = capacity
   }
   
-  func append(newElement: Element) {
+  func append(_ newElement: Element) {
     if capacity_ <= count + 1 {
       reserveCapacity(max(2, capacity_ << 1))
     }
     
-    (storage_ + backIndex_).initialize(newElement)
+    (storage_! + backIndex_).initialize(to: newElement)
     backIndex_ = (backIndex_ &+ 1) & (capacity_ &- 1)
   }
   
-  func prepend(newElement: Element) {
+  func prepend(_ newElement: Element) {
     if capacity_ <= count + 1 {
       reserveCapacity(max(2, capacity_ << 1))
     }
     
     frontIndex_ = (frontIndex_ &- 1) & (capacity &- 1)
-    (storage_ + frontIndex_).initialize(newElement)
+    (storage_! + frontIndex_).initialize(to: newElement)
   }
   
-  func removeAll(keepCapacity keepCapacity: Bool = false) {
+  func removeAll(keepCapacity: Bool = false) {
     if capacity == 0 {
       return
     }
     
     if frontIndex_ <= backIndex_ {
-      (storage_ + frontIndex_).destroy(count)
+      (storage_! + frontIndex_).deinitialize(count: count)
     } else {
       // destroy tail
-      storage_.destroy(backIndex_)
+      storage_?.deinitialize(count: backIndex_)
       
       // destroy head
       let frontCount = capacity_ &- frontIndex_
-      (storage_ + frontIndex_).destroy(frontCount)
+      (storage_! + frontIndex_).deinitialize(count: frontCount)
     }
     
     frontIndex_ = 0
     backIndex_ = 0
     
     if !keepCapacity {
-      storage_.dealloc(capacity_)
+      storage_?.deallocate(capacity: capacity_)
       capacity_ = 0
     }
   }
   
   func removeFirst() -> Element {
-    let element = (storage_ + frontIndex_).move()
+    let element = (storage_! + frontIndex_).move()
     frontIndex_ = (frontIndex_ &+ 1) & (capacity_ &- 1)
     return element
   }
   
-  func removeFirst(count: Int) {
+  func removeFirst(_ count: Int) {
     let newFrontIndex = (frontIndex_ &+ count) & (capacity_ &- 1)
     if frontIndex_ <= newFrontIndex {
-      (storage_ + frontIndex_).destroy(count)
+      (storage_! + frontIndex_).deinitialize(count: count)
     } else {
       // destroy tail
-      storage_.destroy(newFrontIndex)
+      storage_?.deinitialize(count: newFrontIndex)
       
       // destroy head
       let frontCount = capacity_ &- frontIndex_
-      (storage_ + frontIndex_).destroy(frontCount)
+      (storage_! + frontIndex_).deinitialize(count: frontCount)
     }
     
     frontIndex_ = newFrontIndex
@@ -176,20 +180,20 @@ class ArrayDequeBuffer<Element> {
   
   func removeLast() -> Element {
     backIndex_ = (backIndex_ &- 1) & (capacity_ &- 1)
-    return (storage_ + backIndex_).move()
+    return (storage_! + backIndex_).move()
   }
   
-  func removeLast(count: Int) {
+  func removeLast(_ count: Int) {
     let newBackIndex = (backIndex_ &- count) & (capacity_ &- 1)
     if newBackIndex <= backIndex_ {
-      (storage_ + newBackIndex).destroy(count)
+      (storage_! + newBackIndex).deinitialize(count: count)
     } else {
       // destroy tail
-      storage_.destroy(backIndex_)
+      storage_?.deinitialize(count: backIndex_)
       
       // destroy head
       let frontCount = capacity_ &- newBackIndex
-      (storage_ + newBackIndex).destroy(frontCount)
+      (storage_! + newBackIndex).deinitialize(count: frontCount)
     }
     
     backIndex_ = newBackIndex
@@ -205,7 +209,7 @@ class ArrayDequeBuffer<Element> {
   
   var capacity_: Int = 0
   
-  var storage_: Storage
+  var storage_: Storage?
   
   var frontIndex_: Int = 0
   
