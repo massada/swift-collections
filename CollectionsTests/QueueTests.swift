@@ -147,9 +147,8 @@ class QueueTests : XCTestCase {
   }
   
   func testPushingPerformance() {
-    var queue = Queue<Int>()
-    
     measure {
+      var queue = Queue<Int>()
       for i in 0..<100_000 {
         queue.enqueue(i)
       }
@@ -157,9 +156,8 @@ class QueueTests : XCTestCase {
   }
   
   func testPushingPoppingPerformance() {
-    var queue = Queue<Int>()
-    
     measure {
+      var queue = Queue<Int>()
       for i in 0..<100_000 {
         queue.enqueue(i)
         XCTAssertEqual(i, queue.dequeue())

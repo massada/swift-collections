@@ -24,7 +24,7 @@ public struct PriorityQueue<Element : Comparable> : ExpressibleByArrayLiteral {
   /// Constructs an empty `PriorityQueue` that orders its elements according
   /// to their natural ordering.
   public init() {
-    self.init(isOrdered: <)
+    self.init(isOrdered: <=)
   }
   
   /// Constructs a `PriorityQueue` that orders its elements according

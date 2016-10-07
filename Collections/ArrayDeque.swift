@@ -55,6 +55,11 @@ public struct ArrayDeque<Element> : ExpressibleByArrayLiteral {
     return storage_.capacity
   }
   
+  /// The number of elements.
+  public var count: Int {
+    return storage_.count
+  }
+  
   /// The elements storage.
   var storage_: Storage
 }
@@ -274,7 +279,7 @@ extension ArrayDeque : BidirectionalCollection, MutableCollection {
   /// - Returns: The index value immediately after `i`.
   public func index(after i: Index) -> Index {
     checkIndex(i)
-    return i + 1
+    return i &+ 1
   }
   
   /// Returns the position immediately before the given index.
@@ -284,7 +289,7 @@ extension ArrayDeque : BidirectionalCollection, MutableCollection {
   /// - Returns: The index value immediately before `i`.
   public func index(before i: Index) -> Index {
     checkIndex(i)
-    return i - 1
+    return i &- 1
   }
   
   /// Checks that the given `index` is valid.

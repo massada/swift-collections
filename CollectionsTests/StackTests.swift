@@ -143,9 +143,8 @@ class StackTests : XCTestCase {
   }
   
   func testPushingPerformance() {
-    var stack = Stack<Int>()
-    
     measure {
+      var stack = Stack<Int>()
       for i in 0..<100_000 {
         stack.push(i)
       }
@@ -153,9 +152,8 @@ class StackTests : XCTestCase {
   }
   
   func testPushingPoppingPerformance() {
-    var stack = Stack<Int>()
-    
     measure {
+      var stack = Stack<Int>()
       for i in 0..<100_000 {
         stack.push(i)
         XCTAssertEqual(i, stack.pop())

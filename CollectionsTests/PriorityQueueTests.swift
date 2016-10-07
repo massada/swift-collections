@@ -231,20 +231,18 @@ class PriorityQueueTests : XCTestCase {
   }
   
   func testPushingPerformance() {
-    var queue = PriorityQueue<Int>()
-    
     measure {
-      for i in 0..<10_000 {
+      var queue = PriorityQueue<Int>()
+      for i in 0..<100_000 {
         queue.enqueue(i)
       }
     }
   }
   
   func testPushingPoppingPerformance() {
-    var queue = PriorityQueue<Int>()
-    
     measure {
-      for i in 0..<10_000 {
+      var queue = PriorityQueue<Int>()
+      for i in 0..<100_000 {
         queue.enqueue(i)
         XCTAssertEqual(i, queue.dequeue())
       }
